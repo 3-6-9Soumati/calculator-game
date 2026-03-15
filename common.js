@@ -58,19 +58,13 @@ function setupCalculator() {
     });
 }
 
-// 2. 電卓の基本操作ロジック
+// 【シンプル版】まずはこれで動くか試してみてください
 function addToDisplay(value) {
-    if (isProcessing) return; // 処理中なら何もしない
-    isProcessing = true;
-    
-    // 既存の処理
+    console.log("ボタンが押されました: " + value); // デバッグ用：F12キーで確認
     const input = document.getElementById('calcInput');
-    if (input) input.value += value;
-    
-    // わずかに時間を置いてフラグを解除（0.1秒）
-    setTimeout(() => {
-        isProcessing = false;
-    }, 100);
+    if (input) {
+        input.value += value;
+    }
 }
 
 function clearInput() { 
