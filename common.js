@@ -49,12 +49,15 @@ function setupCalculator() {
     placeholder.innerHTML = calcHTML;
     const buttons = placeholder.querySelectorAll('.calc-btn');
     buttons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault(); // タップの遅延を防ぐ
-            // onclickで指定していた関数をここで呼ぶ
+        btn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // タッチの瞬間に反応を止め、クリックとの重複を防ぐ
             const func = btn.getAttribute('onclick');
-            eval(func); 
-        });
+            if (func) {
+                // 文字列から関数を直接実行する代わりに、簡単な関数呼び出しを行う
+                const action = func.replace('()', '');
+                window[action]();
+            }
+        }, { passive: false });
     });
 }
 
