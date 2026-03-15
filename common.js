@@ -145,3 +145,8 @@ function clearCalculator() {
     if (document.getElementById('divB')) document.getElementById('divB').value = "";
     if (document.getElementById('remHistory')) document.getElementById('remHistory').innerHTML = "";
 }
+
+window.onerror = function(message, source, lineno, colno, error) {
+    alert("エラー発生: " + message + " (行: " + lineno + ")");
+    return false;
+};
