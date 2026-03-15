@@ -48,14 +48,24 @@ function setupCalculator() {
     
     placeholder.innerHTML = calcHTML;
     const buttons = placeholder.querySelectorAll('.calc-btn');
+    // 【修正：58行目付近】
     buttons.forEach(btn => {
         btn.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // タッチの瞬間に反応を止め、クリックとの重複を防ぐ
-            const func = btn.getAttribute('onclick');
-            if (func) {
-                // 文字列から関数を直接実行する代わりに、簡単な関数呼び出しを行う
-                const action = func.replace('()', '');
-                window[action]();
+            e.preventDefault();
+            
+            // onclick属性から関数名と引数を取得
+            const onclick = btn.getAttribute('onclick'); // 例: "addToDisplay('7')"
+            
+            // 関数を安全に実行する
+            if (onclick.includes('addToDisplay')) {
+                const val = onclick.match(/'(.*?)'/)[1]; // '7'を取り出す
+                addToDisplay(val);
+            } else if (onclick === 'clearInput()') {
+                clearInput();
+            } else if (onclick === 'backspace()') {
+                backspace();
+            } else if (onclick === 'calculate()') {
+                calculate();
             }
         }, { passive: false });
     });
