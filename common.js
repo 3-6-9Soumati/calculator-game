@@ -59,8 +59,18 @@ function setupCalculator() {
 }
 
 // 2. 電卓の基本操作ロジック
-function addToDisplay(d) { 
-    document.getElementById('calcInput').value += d; 
+function addToDisplay(value) {
+    if (isProcessing) return; // 処理中なら何もしない
+    isProcessing = true;
+    
+    // 既存の処理
+    const input = document.getElementById('calcInput');
+    if (input) input.value += value;
+    
+    // わずかに時間を置いてフラグを解除（0.1秒）
+    setTimeout(() => {
+        isProcessing = false;
+    }, 100);
 }
 
 function clearInput() { 
