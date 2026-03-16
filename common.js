@@ -14,27 +14,27 @@ function setupCalculator() {
                 <button class="calc-btn" onclick="clearInput()">C</button>
                 <button class="calc-btn" onclick="backspace()">BS</button>
                 <button class="calc-btn" onclick="addToDisplay('(')">(</button>
-                <button class="calc-btn" onclick="addToDisplay(')')">)</button><br>
+                <button class="calc-btn" onclick="addToDisplay(')')">)</button>
                 
                 <button class="calc-btn" onclick="addToDisplay('7')">7</button>
                 <button class="calc-btn" onclick="addToDisplay('8')">8</button>
                 <button class="calc-btn" onclick="addToDisplay('9')">9</button>
-                <button class="calc-btn" onclick="addToDisplay('÷')">÷</button><br>
+                <button class="calc-btn" onclick="addToDisplay('÷')">÷</button>
                 
                 <button class="calc-btn" onclick="addToDisplay('4')">4</button>
                 <button class="calc-btn" onclick="addToDisplay('5')">5</button>
                 <button class="calc-btn" onclick="addToDisplay('6')">6</button>
-                <button class="calc-btn" onclick="addToDisplay('×')">×</button><br>
+                <button class="calc-btn" onclick="addToDisplay('×')">×</button>
                 
                 <button class="calc-btn" onclick="addToDisplay('1')">1</button>
                 <button class="calc-btn" onclick="addToDisplay('2')">2</button>
                 <button class="calc-btn" onclick="addToDisplay('3')">3</button>
-                <button class="calc-btn" onclick="addToDisplay('-')">-</button><br>
+                <button class="calc-btn" onclick="addToDisplay('-')">-</button>
                 
                 <button class="calc-btn" onclick="addToDisplay('0')">0</button>
                 <button class="calc-btn" onclick="addToDisplay('.')">.</button>
                 <button class="calc-btn" onclick="addToDisplay('^')">^</button>
-                <button class="calc-btn" onclick="addToDisplay('+')">+</button><br>
+                <button class="calc-btn" onclick="addToDisplay('+')">+</button>
                 
                 <button class="calc-btn" style="width:250px;" onclick="calculate()">＝ 計算実行</button>
             </div>

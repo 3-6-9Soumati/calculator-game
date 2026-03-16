@@ -43,23 +43,33 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
 button { padding: 10px 16px; cursor: pointer; margin: 2px; border-radius: 4px; border: 1px solid #999; font-size: 16px; }
 /* ボタンの見た目を整える */
 .calc-btn { 
-    width: 21%; /* 22%から少し減らして、余白分の隙間を作る */
-    height: 55px; /* 少し高くして押しやすく */
+    /* widthを計算式（calc）にするのが一番確実です */
+    width: calc(25% - 8px); /* 25%から余白分を引く */
+    height: 55px; 
+    margin: 4px 0; /* 左右の余白はflexが自動調整するので上下だけでOK */
     font-size: 18px; 
     background: #fff; 
-    margin: 4px 1.5%; /* 上下 4px, 左右 1.5% の余白 */
     border: 1px solid #999;
     border-radius: 6px;
-    box-shadow: 0 2px 0 #bbb; /* 少し立体感を出してボタンらしく */
+    box-shadow: 0 2px 0 #bbb;
     touch-action: manipulation;
-    vertical-align: top;
+    box-sizing: border-box;
 }
+
 /* 計算実行ボタン（横長）の調整 */
 .calc-btn-wide {
     width: 95% !important; /* ほぼ一行まるごと使う */
     margin: 8px auto !important;
     display: block;
 }
+/* ボタンを包む親要素の設定 */
+.calc-buttons-container {
+    display: flex;       /* フレックスボックスを有効化 */
+    flex-wrap: wrap;     /* 溢れたら次の行へ */
+    justify-content: space-between; /* 均等に並べる */
+    width: 100%;
+}
+
 #calcInput { width: 95%; height: 40px; font-size: 20px; margin-bottom: 10px; text-align: right; display: block; margin: 0 auto 10px; background: white; border: 1px solid #999; }
 .history-box { width: 95%; height: 80px; overflow-y: auto; border: 1px solid #ccc; background: white; margin: 0 auto 10px auto; font-size: 14px; text-align: left; }
 .rem-history { width: 95%; height: 70px; overflow-y: auto; border: 1px solid #ccc; background: white; margin: 5px auto; font-size: 13px; text-align: left; }
