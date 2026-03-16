@@ -11,11 +11,10 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
 /* --- ゲームコンテナ（スマホ/PC切り替え） --- */
 .game-container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
 @media (min-width: 768px) {
-    .game-container { flex-direction: row; align-items: flex-start; }
+    .game-container { flex-direction: row; align-items: flex-start; justify-content: center; }
 }
 
 /* --- メインエリア --- */
-/* --- メインエリアの修正 --- */
 .game-area {
     width: 100%;
     max-width: 500px;
@@ -24,13 +23,11 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
     background: white;
     border-radius: 8px;
     position: relative;
-    /* min-height: 520px; を削除し、auto にするか数値を小さくします */
     min-height: auto; 
     display: flex;
     flex-direction: column;
     justify-content: flex-start; 
     box-sizing: border-box;
-    /* 下側の余白を少し詰める */
     padding-bottom: 5px;
 }
 
@@ -49,47 +46,46 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
     touch-action: pan-y;
 }
 
-/* --- 【重要】すべてのボタンの共通設定 --- */
-/* モード選択、ゲーム開始、電卓、戻るボタンすべてを対象にします */
+/* --- ボタンの共通設定（影と立体感） --- */
 button, .calc-btn, .back-menu-btn {
-    -webkit-tap-highlight-color: transparent; /* スマホの青い枠を消す */
+    -webkit-tap-highlight-color: transparent;
     cursor: pointer;
-    transition: transform 0.05s, filter 0.05s; /* 動きを滑らかに */
+    transition: transform 0.05s, filter 0.05s;
     outline: none;
+    
+    background: #fff;
+    border: 1px solid #999;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 16px;
+    box-shadow: 0 2px 0 #999; /* 全ボタン共通の影 */
 }
 
-/* 「メニューに戻る」ボタン固有のデザイン（ここに集約する） */
+/* 押された時の演出（全てのボタン共通） */
+.btn-pressed {
+    transform: translateY(2px) !important;
+    box-shadow: none !important;
+    filter: brightness(0.85) !important;
+}
+
+/* 「メニューに戻る」ボタン特有の調整 */
 .back-menu-btn {
     background: #666;
     color: white;
     border: none;
     width: 100%;
     border-radius: 4px;
-    padding: 12px;
-    font-size: 16px;
-    margin-top: 15px; /* ここを調整して上下の余白を制御 */
+    margin-top: 15px;
     margin-bottom: 5px;
-    position: relative; /* 必要な場合のみ */
 }
 
-/* 押された時の「沈む」演出（filterを使うことで元の色を問いません） */
-.btn-pressed {
-    transform: translateY(2px) !important;
-    box-shadow: none !important;
-    filter: brightness(0.8) !important; /* 元の色を20%暗くする */
-}
-
-/* --- 電卓ボタンのデザイン --- */
+/* --- 電卓ボタンの個別微調整 --- */
 .calc-btn {
     display: inline-block;
     width: calc(25% - 8px); 
     height: 55px; 
     margin: 4px 0; 
     font-size: 18px; 
-    background: #fff; 
-    border: 1px solid #999;
-    border-radius: 6px;
-    box-shadow: 0 2px 0 #bbb;
     touch-action: manipulation;
     box-sizing: border-box;
 }
@@ -112,46 +108,25 @@ button, .calc-btn, .back-menu-btn {
 .history-box { width: 95%; height: 80px; overflow-y: auto; border: 1px solid #ccc; background: white; margin: 0 auto 10px auto; font-size: 14px; text-align: left; }
 .rem-history { width: 95%; height: 70px; overflow-y: auto; border: 1px solid #ccc; background: white; margin: 5px auto; font-size: 13px; text-align: left; }
 
-/* 元のCSSにあるbuttonタグへのマージン設定なども維持 */
-button { padding: 10px 16px; margin: 2px; border-radius: 4px; border: 1px solid #999; font-size: 16px; }
-
+/* --- 問題表示エリア --- */
 #question { font-size: 1.3em; font-weight: bold; margin: 20px 0; line-height: 1.4; }
-
-/* PCでのホバー（マウス乗せ）演出 */
-@media (hover: hover) {
-    button:hover, .calc-btn:hover { filter: brightness(0.95); }
-}
-
-/* common.css に追加 */
-#result-message {
-    height: 1.5em; /* 1行分のスペースを常に確保 */
-    margin: 10px 0;
-    font-weight: bold;
-}
-
-#ruleText {
-    line-height: 1.2;
-    font-size: 0.9em; /* 少し小さくして圧迫感を減らす */
-}
-
-/* 正解・不正解表示用のスペースを固定確保 */
-#feedback {
-    min-height: 1.5em; 
-    font-size: 1.3em; 
-    margin-top: 20px;
-    margin-bottom: 10px;
-}
+#feedback { min-height: 1.5em; font-size: 1.3em; margin-top: 20px; margin-bottom: 10px; }
+#result-message { height: 1.5em; margin: 10px 0; font-weight: bold; }
+#ruleText { line-height: 1.2; font-size: 0.9em; }
 
 .rule-box {
-    height: 30px; /* 必要最低限の高さに調整 */
+    height: 30px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: red; /* 注意書きを赤に */
+    color: red;
     font-weight: bold;
     font-size: 0.9em;
 }
 
-.hidden {
-    visibility: hidden;
+.hidden { visibility: hidden; }
+
+/* PCでのホバー演出 */
+@media (hover: hover) {
+    button:hover, .calc-btn:hover { filter: brightness(0.95); }
 }

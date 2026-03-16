@@ -193,8 +193,11 @@
         html += `<div style="margin: 15px 0;"><label class="config-label"><input type="checkbox" id="noNegative" checked> マイナスにならないようにする</label></div>`;
         html += `<div>対象とする進数:</div><div class="checkbox-group">`;
         for(let i=2; i<=16; i++) html += `<label style="width:70px"><input type="checkbox" name="nIn" value="${i}" checked> ${i}進</label>`;
-        html += `</div><br><button onclick="initGame()" style="padding:15px 30px; background:#4CAF50; color:white; font-size:1.2em; border:none; border-radius:5px;">ゲーム開始</button>`;
+        html += `</div><br><button onclick="initGame()"class="back-menu-btn" style="width: auto;">ゲーム開始</button>`;
         document.getElementById('baseSelection').innerHTML = html;
+        if (typeof applyButtonFeedback === 'function') {
+            applyButtonFeedback();
+        }
     }
 
     function initGame() {

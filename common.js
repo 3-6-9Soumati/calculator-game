@@ -184,27 +184,23 @@ window.onerror = function(message, source, lineno, colno, error) {
  * 画面上のすべてのボタンに「押し込み演出」を設定する共通関数
  */
 function applyButtonFeedback() {
-    // ページ内のすべてのボタンを検索
     const allButtons = document.querySelectorAll('button, .calc-btn, .back-menu-btn');
-
     allButtons.forEach(btn => {
-        // すでに登録済みの場合はスキップ
+        // すでに登録済みなら何もしない
         if (btn.dataset.feedbackSet === "true") return;
 
-        const press = () => btn.classList.add('btn-pressed');
+        const press = (e) => {
+            // クリックイベントの伝播を防がないように注意
+            btn.classList.add('btn-pressed');
+        };
         const release = () => btn.classList.remove('btn-pressed');
 
-        // スマホ用イベント
-        btn.addEventListener('touchstart', press, { passive: true });
-        btn.addEventListener('touchend', release);
-        btn.addEventListener('touchcancel', release);
-
-        // PC用イベント
         btn.addEventListener('mousedown', press);
         btn.addEventListener('mouseup', release);
         btn.addEventListener('mouseleave', release);
-
-        // 登録済みフラグ
+        btn.addEventListener('touchstart', press, { passive: true });
+        btn.addEventListener('touchend', release);
+        
         btn.dataset.feedbackSet = "true";
     });
 }
