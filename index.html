@@ -206,6 +206,9 @@
         if (placeholder && placeholder.innerHTML.trim() === "") {
             if (typeof setupCalculator === 'function') {
                 setupCalculator();
+                if (typeof applyButtonFeedback === 'function') {
+                    applyButtonFeedback();
+                }
             }
         }
 
