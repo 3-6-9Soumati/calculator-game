@@ -201,28 +201,22 @@
     }
 
     function initGame() {
-        // 【追加】ゲーム開始時に、電卓が空っぽなら強制的に作成する
         const placeholder = document.getElementById('calculator-placeholder');
+        // 電卓が空なら生成
         if (placeholder && placeholder.innerHTML.trim() === "") {
             if (typeof setupCalculator === 'function') {
                 setupCalculator();
-                if (typeof applyButtonFeedback === 'function') {
-                    applyButtonFeedback();
-                }
             }
         }
 
-        // IDを元に、直接 style.display を操作して物理的に切り替える
-        const menu = document.getElementById('menuPage');
-        const game = document.getElementById('gamePage');
-        
-        if (menu) menu.style.display = 'none'; // メニューを消す
-        if (game) game.style.display = 'block'; // ゲームを出す
+        // 表示切り替え
+        document.getElementById('menuPage').style.display = 'none';
+        document.getElementById('gamePage').style.display = 'block';
 
-        // 既存のクラス操作も念のため継続
-        menu.classList.remove('active');
-        game.classList.add('active');
-        
+        // ★重要：電卓生成後にイベントを強制再登録
+        if (typeof applyButtonFeedback === 'function') {
+            applyButtonFeedback();
+        }
         if (typeof currentStreak !== 'undefined') currentStreak = 0;
         const streakElement = document.getElementById("streakCount");
         if (streakElement) streakElement.innerText = 0;

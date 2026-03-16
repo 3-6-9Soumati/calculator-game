@@ -14,8 +14,8 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
     background: #ecf0f1;
     padding: 10px;
     border-radius: 5px;
-    margin-top: 20px;    /* 上の隙間を確保 */
-    margin-bottom: 20px; /* 下の隙間を確保 */
+    margin-top: 10px;    /* 上の隙間を確保 */
+    margin-bottom: 10px; /* 下の隙間を確保 */
 }
 
 /* --- ゲームコンテナ（スマホ/PC切り替え） --- */
@@ -139,16 +139,6 @@ button, .calc-btn, .back-menu-btn {
 /* PCでのホバー演出 */
 @media (hover: hover) {
     button:hover, .calc-btn:hover { filter: brightness(0.95); }
-}
-
-/* メニューページのボタンを一括で統一 */
-#menuPage button {
-    display: block;        /* 横幅いっぱいに */
-    width: 100%;           /* 幅を統一 */
-    max-width: 300px;      /* 大きすぎないように制限 */
-    margin: 10px auto;     /* 上下の間隔を10px確保 */
-    padding: 15px;         /* 押しやすいように内側の余白を確保 */
-    box-sizing: border-box;
 }
 
 /* メニューページのボタンを一括で統一 */
