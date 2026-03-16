@@ -23,11 +23,10 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
     background: white;
     border-radius: 8px;
     position: relative;
-    /* 最小の高さを十分確保し、中身が増えても枠が動かないようにする */
-    min-height: 450px; 
+    /* 枠の高さを大きく固定 */
+    min-height: 520px; 
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* 上詰めに配置 */
     box-sizing: border-box;
 }
 
@@ -125,4 +124,19 @@ button { padding: 10px 16px; margin: 2px; border-radius: 4px; border: 1px solid 
     height: 1.5em; /* 1行分のスペースを常に確保 */
     margin: 10px 0;
     font-weight: bold;
+}
+
+#ruleText {
+    min-height: 3em; 
+    color: red; 
+    font-weight: bold; 
+    margin-bottom: 10px;
+}
+
+/* 正解・不正解表示用のスペースを固定確保 */
+#feedback {
+    min-height: 1.5em; 
+    font-size: 1.3em; 
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
