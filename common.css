@@ -141,12 +141,13 @@ button, .calc-btn, .back-menu-btn {
     button:hover, .calc-btn:hover { filter: brightness(0.95); }
 }
 
-/* メニューページのボタンを一括で統一 */
+/* メニュー内にあるすべてのボタンの幅を統一 */
 #menuPage button {
-    display: block;          /* 改行してブロック状にする */
-    width: 100%;             /* 横幅いっぱいに */
-    max-width: 300px;        /* 広がりすぎないように制限 */
-    margin: 15px auto;       /* 上下に15pxの隙間、左右は中央揃え */
-    padding: 18px 0;         /* 押しやすいように上下のパディングを大きく */
-    box-sizing: border-box;  /* パディングを含めて幅を計算 */
+    display: block;
+    width: 100%;           /* 横幅いっぱいに */
+    max-width: 400px;      /* 適切な最大幅を設定 */
+    margin: 10px auto;     /* 上下の間隔を確保 */
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 16px;
 }
