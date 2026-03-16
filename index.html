@@ -100,15 +100,15 @@
             valA = Math.floor(Math.random() * 50) + 1;
             valB = Math.floor(Math.random() * 50) + 1;
             
-            if (op === '+') { decAns = valA + valB; opSymbol = "＋"; document.getElementById("ruleText").innerText = "nbsp;<br>&nbsp;"; }
+            if (op === '+') { decAns = valA + valB; opSymbol = "＋"; document.getElementById("ruleText").innerHTML = "<span style='visibility:hidden;'>.<br>.</span>"; }
             else if (op === '-') { 
                 if (document.getElementById('noNegative') && document.getElementById('noNegative').checked && valA < valB) [valA, valB] = [valB, valA];
-                decAns = valA - valB; opSymbol = "－"; document.getElementById("ruleText").innerText = "nbsp;<br>&nbsp;";
+                decAns = valA - valB; opSymbol = "－"; document.getElementById("ruleText").innerHTML = "<span style='visibility:hidden;'>.<br>.</span>";
             }
-            else if (op === '*') { decAns = valA * valB; opSymbol = "×"; document.getElementById("ruleText").innerText = "nbsp;<br>&nbsp;"; }
+            else if (op === '*') { decAns = valA * valB; opSymbol = "×"; document.getElementById("ruleText").innerHTML = "<span style='visibility:hidden;'>.<br>.</span>"; }
             else if (op === '/') { 
                 decAns = valA / valB; opSymbol = "÷"; 
-                document.getElementById("ruleText").innerText = "※小数第3位まで求めてください（第4位切捨）";
+                document.getElementById("ruleText").innerHTML = "※小数第4位を切り捨て<br>小数第3位まで求めてください";
             }
 
             // 【追加機能】答えが1以下（0以下または1）の場合は再生成
