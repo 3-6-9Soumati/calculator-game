@@ -49,16 +49,33 @@ function setupCalculator() {
     placeholder.innerHTML = calcHTML;
     const buttons = placeholder.querySelectorAll('.calc-btn');
     // 【修正：58行目付近】
+    let touchStartY = 0;
+    let isScrolling = false;
+
     buttons.forEach(btn => {
         btn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
+            touchStartY = e.touches[0].clientY;
+            isScrolling = false; // タッチ開始時はスクロールしていない
+        }, { passive: true });
+
+        btn.addEventListener('touchmove', (e) => {
+            let touchMoveY = e.touches[0].clientY;
+            // 10px以上指が動いたら「スクロール中」とみなす
+            if (Math.abs(touchMoveY - touchStartY) > 10) {
+                isScrolling = true;
+            }
+        }, { passive: true });
+
+        btn.addEventListener('touchend', (e) => {
+            // スクロール中なら、ボタンのクリック処理を無視する
+            if (isScrolling) return;
+
+            // スクロールでない場合（ただのタップ）のみ実行
+            e.preventDefault(); 
+            const onclick = btn.getAttribute('onclick');
             
-            // onclick属性から関数名と引数を取得
-            const onclick = btn.getAttribute('onclick'); // 例: "addToDisplay('7')"
-            
-            // 関数を安全に実行する
             if (onclick.includes('addToDisplay')) {
-                const val = onclick.match(/'(.*?)'/)[1]; // '7'を取り出す
+                const val = onclick.match(/'(.*?)'/)[1];
                 addToDisplay(val);
             } else if (onclick === 'clearInput()') {
                 clearInput();
