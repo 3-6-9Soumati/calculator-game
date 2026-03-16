@@ -140,3 +140,15 @@ button { padding: 10px 16px; margin: 2px; border-radius: 4px; border: 1px solid 
     margin-top: 20px;
     margin-bottom: 10px;
 }
+
+/* common.css に追加 */
+.rule-box {
+    min-height: 3em; /* 1行または2行分を常に確保 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hidden {
+    visibility: hidden; /* 見た目は消すが、場所（高さ）は残す */
+}

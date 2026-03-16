@@ -42,6 +42,10 @@
     </div>
 </div>
 
+<div id="ruleBox" class="rule-box">
+    <div id="ruleText"></div>
+</div>
+
 <script src="common.js?ver=104"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -83,6 +87,7 @@
         if (typeof clearCalculator === 'function') {
             clearCalculator();
         }
+        const ruleText = document.getElementById("ruleText");
         let nList = [];
         document.getElementsByName('nIn').forEach(e => { if(e.checked) nList.push(parseInt(e.value)); });
         let opList = [];
@@ -100,15 +105,29 @@
             valA = Math.floor(Math.random() * 50) + 1;
             valB = Math.floor(Math.random() * 50) + 1;
             
-            if (op === '+') { decAns = valA + valB; opSymbol = "＋"; document.getElementById("ruleText").innerHTML = "<span style='visibility:hidden;'>.<br>.</span>"; }
-            else if (op === '-') { 
-                if (document.getElementById('noNegative') && document.getElementById('noNegative').checked && valA < valB) [valA, valB] = [valB, valA];
-                decAns = valA - valB; opSymbol = "－"; document.getElementById("ruleText").innerHTML = "<span style='visibility:hidden;'>.<br>.</span>";
+            if (op === '+') { 
+                decAns = valA + valB; opSymbol = "＋"; 
+                ruleText.innerHTML = "※小数第3位まで求めてください（第4位切捨）"; // 中身は入れておく
+                ruleText.classList.add("hidden"); // 見えなくする（高さは維持される） 
             }
-            else if (op === '*') { decAns = valA * valB; opSymbol = "×"; document.getElementById("ruleText").innerHTML = "<span style='visibility:hidden;'>.<br>.</span>"; }
+            else if (op === '-') { 
+                if (document.getElementById('noNegative') && document.getElementById('noNegative').checked && valA < valB)
+                    [valA, valB] = [valB, valA];
+                decAns = valA - valB; 
+                opSymbol = "－";
+                ruleText.innerHTML = "※小数第3位まで求めてください（第4位切捨）"; // 中身は入れておく
+                ruleText.classList.add("hidden"); // 見えなくする（高さは維持される） 
+            }
+            else if (op === '*') { 
+                decAns = valA * valB; 
+                opSymbol = "×"; ruleText.innerHTML = "※小数第3位まで求めてください（第4位切捨）"; // 中身は入れておく
+                ruleText.classList.add("hidden"); // 見えなくする（高さは維持される）  
+            }
             else if (op === '/') { 
-                decAns = valA / valB; opSymbol = "÷"; 
-                document.getElementById("ruleText").innerHTML = "※小数第4位を切り捨て<br>小数第3位まで求めてください";
+                decAns = valA / valB; 
+                opSymbol = "÷"; 
+                ruleText.innerHTML = "※小数第3位まで求めてください（第4位切捨）";
+                ruleText.classList.remove("hidden"); // 見えるようにする
             }
 
             // 【追加機能】答えが1以下（0以下または1）の場合は再生成
