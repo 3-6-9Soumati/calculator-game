@@ -190,9 +190,13 @@ function applyButtonFeedback() {
         if (btn.dataset.feedbackSet === "true") return;
 
         const press = () => btn.classList.add('btn-pressed');
-        const release = () => btn.classList.remove('btn-pressed');
+        const release = () => {
+            btn.classList.remove('btn-pressed');
+            // スマホバグ対策: タップ終了後にフォーカスを外すことで動作を安定させる
+            btn.blur(); 
+        };
 
-        // アニメーション用
+        // アニメーション用イベント
         btn.addEventListener('touchstart', press, { passive: true });
         btn.addEventListener('touchend', release);
         btn.addEventListener('touchcancel', release);
@@ -200,11 +204,8 @@ function applyButtonFeedback() {
         btn.addEventListener('mouseup', release);
         btn.addEventListener('mouseleave', release);
 
-        // ★スマホでの反応を確実にするための修正
-        // 電卓ボタン (.calc-btn) の場合、clickイベントが遅延しないように調整
-        if (btn.classList.contains('calc-btn')) {
-            btn.style.touchAction = "manipulation"; // ダブルタップズームを無効化して反応を速くする
-        }
+        // iOS Safari対策: これがないと click が発火しない場合がある
+        btn.style.cursor = 'pointer';
         
         btn.dataset.feedbackSet = "true";
     });

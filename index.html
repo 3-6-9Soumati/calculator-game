@@ -228,14 +228,16 @@
         document.getElementsByName(name).forEach(e => e.checked = checked);
     }
 
+    // 進数選択エリアのHTMLを生成するヘルパー関数
     function createCheckboxes(label, id) {
-        let html = `<div>${label}</div><div class="btn-group" style="margin-bottom: 10px;">
-            <button onclick="toggleAll('${id}', true)" style="width: auto; padding: 5px 10px; margin: 2px; font-size: 0.9em;">全選択</button>
-            <button onclick="toggleAll('${id}', false)" style="width: auto; padding: 5px 10px; margin: 2px; font-size: 0.9em;">全解除</button>
+        let html = `<div>${label}</div><div class="btn-group" style="margin-bottom: 10px; text-align: center;">
+            <button onclick="toggleAll('${id}', true)" class="small-btn">全選択</button>
+            <button onclick="toggleAll('${id}', false)" class="small-btn">全解除</button>
         </div>`;
         html += `<div class="checkbox-group">`;
         for(let i=2; i<=16; i++) {
-            html += `<label style="width:70px"><input type="checkbox" name="${id}" value="${i}" checked> ${i}進</label>`;
+            // style="width:70px" を削除し、CSSのグリッドに任せる
+            html += `<label><input type="checkbox" name="${id}" value="${i}" checked> ${i}進</label>`;
         }
         html += `</div>`;
         return html;

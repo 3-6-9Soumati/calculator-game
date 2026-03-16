@@ -158,3 +158,40 @@ button, .calc-btn, .back-menu-btn {
     font-size: 1.1em;
     cursor: pointer;
 }
+
+/* --- 全選択・全解除ボタン（小さく並べる） --- */
+button.small-btn {
+    display: inline-block !important; /* 強制ブロック（100%幅）を解除 */
+    width: auto !important;           /* 幅を自動に */
+    min-width: 80px;
+    padding: 8px 15px !important;
+    margin: 5px !important;
+    font-size: 0.9em;
+}
+
+/* --- チェックボックスのキレイな整列（グリッドレイアウト） --- */
+.checkbox-group {
+    display: grid;
+    /* 画面幅に合わせて自動で列数を調整し、最小70pxを確保 */
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 10px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    margin: 10px auto;
+    background: #fafafa;
+    text-align: left; /* 左揃えにして1桁と2桁のズレをなくす */
+    border-radius: 8px;
+    max-width: 100%;
+}
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* チェックボックスと文字の間隔 */
+    cursor: pointer;
+}
+
+/* --- スマホ特有のタップバグ対策 --- */
+button, .calc-btn {
+    cursor: pointer; /* iOS Safariでクリックイベントを確実に発火させるため必須 */
+    -webkit-tap-highlight-color: transparent; /* タップ時の青/グレーのハイライトを消す */
+}
