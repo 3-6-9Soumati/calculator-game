@@ -15,7 +15,21 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
 }
 
 /* --- メインエリア --- */
-.game-area { width: 100%; max-width: 500px; border: 2px solid #333; padding: 15px; background: white; border-radius: 8px; position: relative; min-height: 400px; box-sizing: border-box; }
+.game-area {
+    width: 100%;
+    max-width: 500px;
+    border: 2px solid #333;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    position: relative;
+    /* 最小の高さを十分確保し、中身が増えても枠が動かないようにする */
+    min-height: 450px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* 上詰めに配置 */
+    box-sizing: border-box;
+}
 
 /* --- 電卓エリア全体 --- */
 .calc-area {
@@ -39,6 +53,18 @@ button, .calc-btn, .back-menu-btn {
     cursor: pointer;
     transition: transform 0.05s, filter 0.05s; /* 動きを滑らかに */
     outline: none;
+}
+
+/* 「メニューに戻る」ボタンを枠の最下部に固定したい場合 */
+.back-menu-btn {
+    margin-top: auto; /* 上に自動で余白を作り、常に下へ押しやる */
+    background: #666;
+    color: white;
+    border: none;
+    width: 100%;
+    border-radius: 4px;
+    padding: 12px;
+    font-size: 16px;
 }
 
 /* 押された時の「沈む」演出（filterを使うことで元の色を問いません） */
@@ -92,4 +118,11 @@ button { padding: 10px 16px; margin: 2px; border-radius: 4px; border: 1px solid 
 /* PCでのホバー（マウス乗せ）演出 */
 @media (hover: hover) {
     button:hover, .calc-btn:hover { filter: brightness(0.95); }
+}
+
+/* common.css に追加 */
+#result-message {
+    height: 1.5em; /* 1行分のスペースを常に確保 */
+    margin: 10px 0;
+    font-weight: bold;
 }
