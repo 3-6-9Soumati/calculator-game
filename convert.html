@@ -24,14 +24,20 @@
 <div id="gamePage" class="page" style="display: none;">
     <div class="game-container">
         <div class="game-area">
-            <h1>問題</h1>
-            <p>連続正解数: <span id="streakCount">0</span></p>
+            <h1 style="margin: 5px 0;">問題</h1>
+            <p style="margin: 5px 0;">連続正解数: <span id="streakCount">0</span></p>
             <p id="question" style="font-size: 1.5em; font-weight: bold; margin: 20px 0;"></p>
-            <input type="text" id="answer" placeholder="答えを入力" style="font-size: 1.3em; padding: 10px; width: 200px;">
-            <br><br>
-            <button id="checkBtn" onclick="check()" style="font-size: 1.1em; padding: 10px 25px; background: #3498db; color: white; border: none; border-radius: 5px;">回答</button>
-            <button id="nextBtn" onclick="generateQuestion()" style="display: none; font-size: 1.1em; padding: 10px 25px; background: #2ecc71; color: white; border: none; border-radius: 5px;">次の問題</button>
-            <p id="feedback" style="font-size: 1.3em; margin-top: 20px;"></p>
+            
+            <div style="margin: 5px 0;">
+                <input type="text" id="answer" placeholder="答えを入力" style="font-size: 1.3em; padding: 10px; width: 200px;">
+            </div>
+            
+            <div style="height: 50px; margin: 15px 0;">
+                <button id="checkBtn" onclick="check()" style="font-size: 1.1em; padding: 10px 25px; background: #3498db; color: white; border: none; border-radius: 5px;">回答</button>
+                <button id="nextBtn" onclick="generateQuestion()" style="display: none; font-size: 1.1em; padding: 10px 25px; background: #2ecc71; color: white; border: none; border-radius: 5px;">次の問題</button>
+            </div>
+            
+            <p id="feedback" style="min-height: 1.5em; margin: 5px 0; font-size: 1.3em;"></p>
             
             <button class="back-menu-btn" onclick="goBack()">メニューに戻る</button>
         </div>
@@ -50,7 +56,6 @@
         let html = `<div>${label}</div><div class="btn-group">
             <button onclick="toggleAll('${id}', true)">全選択</button>
             <button onclick="toggleAll('${id}', false)">全解除</button>
-            <button onclick="rangeSelect('${id}')">範囲指定</button>
         </div>`;
         html += `<div class="checkbox-group">`;
         for(let i=2; i<=16; i++) {
@@ -63,63 +68,60 @@
 
     function showSelection(mode) {
         currentMode = mode;
-        let modeLabel = "";
-        if (mode === '10toN') modeLabel = "【モード：10進数 → n進数】";
-        else if (mode === 'Nto10') modeLabel = "【モード：n進数 → 10進数】";
-        else if (mode === 'NtoM') modeLabel = "【モード：n進数 → m進数】";
-
-        let html = `<div class="mode-title">${modeLabel}</div>`;
-        if (mode === 'NtoM') {
-            html += createCheckboxes('変換元 (n):', 'nIn', true) + createCheckboxes('変換先 (m):', 'mIn', true);
-        } else {
-            html += createCheckboxes('対象の進数を選択:', 'nIn', false);
-        }
-        html += `<br><button onclick="initGame()" style="padding:15px 30px; background:#4CAF50; color:white; font-size:1.2em; border:none; border-radius:5px;">ゲーム開始</button>`;
+        let modeLabel = mode === '10toN' ? "10進数 → n進数" : (mode === 'Nto10' ? "n進数 → 10進数" : "n進数 → m進数");
+        let html = `<div class="mode-title">【モード：${modeLabel}】</div>`;
+        html += mode === 'NtoM' ? createCheckboxes('変換元 (n):', 'nIn', true) + createCheckboxes('変換先 (m):', 'mIn', true) : createCheckboxes('対象の進数を選択:', 'nIn', false);
+        html += `<br><button onclick="initGame()" class="back-menu-btn" style="width: auto;">ゲーム開始</button>`;
         document.getElementById('baseSelection').innerHTML = html;
+        
+        // 生成後に影イベントを適用
+        if (typeof applyButtonFeedback === 'function') applyButtonFeedback();
+    }
+
+    function initGame() {
+        const placeholder = document.getElementById('calculator-placeholder');
+        if (placeholder && placeholder.innerHTML.trim() === "") {
+            if (typeof setupCalculator === 'function') setupCalculator();
+        }
+
+        const menu = document.getElementById('menuPage');
+        const game = document.getElementById('gamePage');
+        
+        menu.style.display = 'none';
+        game.style.display = 'block';
+        menu.classList.remove('active');
+        game.classList.add('active');
+        
+        currentStreak = 0;
+        document.getElementById("streakCount").innerText = 0;
+        generateQuestion();
+        
+        // 画面切り替え後に電卓ボタン等のイベントも再適用
+        if (typeof applyButtonFeedback === 'function') applyButtonFeedback();
+    }
+
+    function goBack() {
+        document.getElementById('gamePage').style.display = 'none';
+        document.getElementById('menuPage').style.display = 'block';
+        document.getElementById('gamePage').classList.remove('active');
+        document.getElementById('menuPage').classList.add('active');
     }
 
     function generateQuestion() {
         if (typeof clearCalculator === 'function') clearCalculator();
-
-        let nList = [];
+        let nList = [], mList = [];
         document.getElementsByName('nIn').forEach(e => { if(e.checked) nList.push(parseInt(e.value)); });
-        let mList = [];
-        if(currentMode === 'NtoM') {
-            document.getElementsByName('mIn').forEach(e => { if(e.checked) mList.push(parseInt(e.value)); });
-        }
+        if(currentMode === 'NtoM') document.getElementsByName('mIn').forEach(e => { if(e.checked) mList.push(parseInt(e.value)); });
 
         let baseN = nList[Math.floor(Math.random() * nList.length)];
-        let baseM;
-
-        if (currentMode === '10toN') {
-            baseM = baseN;
-            baseN = 10;
-        } else if (currentMode === 'Nto10') {
-            baseM = 10;
-        } else {
-            baseM = mList[Math.floor(Math.random() * mList.length)];
-        }
-
-        if (baseN === baseM) {
-            generateQuestion();
-            return;
-        }
+        let baseM = currentMode === '10toN' ? baseN : (currentMode === 'Nto10' ? 10 : mList[Math.floor(Math.random() * mList.length)]);
+        if (currentMode === '10toN') baseN = 10;
+        
+        if (baseN === baseM) { generateQuestion(); return; }
 
         let val = Math.floor(Math.random() * 255) + 1;
-        let questionText = "";
-        
-        if (baseN === 10) {
-            questionText = `10進数の ${val} を ${baseM} 進数にすると？`;
-            currentAnswer = val.toString(baseM).toUpperCase();
-        } else if (baseM === 10) {
-            questionText = `${baseN} 進数の ${val.toString(baseN).toUpperCase()} を 10進数にすると？`;
-            currentAnswer = val.toString();
-        } else {
-            questionText = `${baseN} 進数の ${val.toString(baseN).toUpperCase()} を ${baseM} 進数にすると？`;
-            currentAnswer = val.toString(baseM).toUpperCase();
-        }
-        
-        document.getElementById("question").innerText = questionText;
+        document.getElementById("question").innerText = `${baseN}進数の ${val.toString(baseN).toUpperCase()} を ${baseM}進数にすると？`;
+        currentAnswer = val.toString(baseM).toUpperCase();
         document.getElementById("answer").value = "";
         document.getElementById("feedback").innerText = "";
         document.getElementById("checkBtn").style.display = "inline-block";
@@ -130,55 +132,13 @@
         let ans = document.getElementById("answer").value.trim().toUpperCase();
         let fb = document.getElementById("feedback");
         if (ans === currentAnswer) {
-            fb.innerText = "正解！ 素晴らしい！";
-            fb.style.color = "green";
-            currentStreak++;
+            fb.innerText = "正解！"; fb.style.color = "green"; currentStreak++;
         } else {
-            fb.innerText = `残念…正解は ${currentAnswer} です。`;
-            fb.style.color = "red";
-            currentStreak = 0;
+            fb.innerText = `残念…正解は ${currentAnswer} です。`; fb.style.color = "red"; currentStreak = 0;
         }
         document.getElementById("streakCount").innerText = currentStreak;
         document.getElementById("checkBtn").style.display = "none";
         document.getElementById("nextBtn").style.display = "inline-block";
-    }
-
-    function initGame() {
-        // 【追加】ゲーム開始時に、電卓が空っぽなら強制的に作成する
-        const placeholder = document.getElementById('calculator-placeholder');
-        if (placeholder && placeholder.innerHTML.trim() === "") {
-            if (typeof setupCalculator === 'function') {
-                setupCalculator();
-            }
-        }
-
-        // IDを元に、直接 style.display を操作して物理的に切り替える
-        const menu = document.getElementById('menuPage');
-        const game = document.getElementById('gamePage');
-        
-        if (menu) menu.style.display = 'none'; // メニューを消す
-        if (game) game.style.display = 'block'; // ゲームを出す
-
-        // 既存のクラス操作も念のため継続
-        menu.classList.remove('active');
-        game.classList.add('active');
-        
-        if (typeof currentStreak !== 'undefined') currentStreak = 0;
-        const streakElement = document.getElementById("streakCount");
-        if (streakElement) streakElement.innerText = 0;
-        
-        generateQuestion();
-    }
-
-    function goBack() {
-        const menu = document.getElementById('menuPage');
-        const game = document.getElementById('gamePage');
-        
-        if (game) game.style.display = 'none'; // ゲームを消す
-        if (menu) menu.style.display = 'block'; // メニューを出す
-
-        game.classList.remove('active');
-        menu.classList.add('active');
     }
 </script>
 </body>

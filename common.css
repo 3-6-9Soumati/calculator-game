@@ -6,7 +6,16 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
 /* --- メニュー・設定エリア --- */
 .menu-area { max-width: 600px; margin: auto; padding: 20px; background: white; border-radius: 12px; border: 2px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 .checkbox-group { display: flex; flex-wrap: wrap; gap: 5px; padding: 10px; border: 1px solid #ccc; margin: 10px auto; justify-content: center; max-width: 100%; background: #fafafa; }
-.mode-title { font-size: 1.2em; color: #2c3e50; margin-bottom: 15px; font-weight: bold; background: #ecf0f1; padding: 10px; border-radius: 5px; }
+.mode-title {
+    font-size: 1.2em;
+    color: #2c3e50;
+    font-weight: bold;
+    background: #ecf0f1;
+    padding: 5px 10px;      /* 上下のパディングを 10px から 5px に変更 */
+    border-radius: 5px;
+    margin-bottom: 10px;    /* 下の余白を 15px から 10px に変更 */
+    margin-top: 0;          /* 上の余白を必要に応じて 0 に設定 */
+}
 
 /* --- ゲームコンテナ（スマホ/PC切り替え） --- */
 .game-container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
