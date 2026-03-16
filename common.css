@@ -19,7 +19,7 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
     width: 100%;
     max-width: 500px;
     border: 2px solid #333;
-    padding: 15px;
+    padding: 10px;
     background: white;
     border-radius: 8px;
     position: relative;
@@ -140,11 +140,13 @@ button { padding: 10px 16px; margin: 2px; border-radius: 4px; border: 1px solid 
 }
 
 .rule-box {
-    height: 40px; /* 3emではなく固定のpxで高さを指定し、安定させる */
+    height: 30px; /* 必要最低限の高さに調整 */
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 5px 0;
+    color: red; /* 注意書きを赤に */
+    font-weight: bold;
+    font-size: 0.9em;
 }
 
 .hidden {
