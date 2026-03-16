@@ -52,40 +52,42 @@ function setupCalculator() {
     let touchStartY = 0;
     let isScrolling = false;
 
+    // common.js の buttons.forEach 内を以下のように調整
     buttons.forEach(btn => {
+        // 1. 触れた瞬間に「沈ませる」
         btn.addEventListener('touchstart', (e) => {
             touchStartY = e.touches[0].clientY;
-            isScrolling = false; // タッチ開始時はスクロールしていない
+            isScrolling = false;
+            btn.classList.add('is-pressed'); // 沈むクラスを追加
         }, { passive: true });
 
+        // 2. 指が動いたら「沈むのをやめる」（スクロール対策）
         btn.addEventListener('touchmove', (e) => {
             let touchMoveY = e.touches[0].clientY;
-            // 10px以上指が動いたら「スクロール中」とみなす
             if (Math.abs(touchMoveY - touchStartY) > 10) {
                 isScrolling = true;
+                btn.classList.remove('is-pressed'); // スクロール中は浮かせる
             }
         }, { passive: true });
 
+        // 3. 指を離したら「浮かせる」
         btn.addEventListener('touchend', (e) => {
-            // スクロール中なら、ボタンのクリック処理を無視する
+            btn.classList.remove('is-pressed'); // クラスを外して戻す
+            
             if (isScrolling) return;
 
-            // スクロールでない場合（ただのタップ）のみ実行
             e.preventDefault(); 
             const onclick = btn.getAttribute('onclick');
-            
-            if (onclick.includes('addToDisplay')) {
-                const val = onclick.match(/'(.*?)'/)[1];
-                addToDisplay(val);
-            } else if (onclick === 'clearInput()') {
-                clearInput();
-            } else if (onclick === 'backspace()') {
-                backspace();
-            } else if (onclick === 'calculate()') {
-                calculate();
-            }
+            // ...以下、addToDisplay などの既存の実行ロジック...
+            // 前回のコードをそのままここに続けてください
         }, { passive: false });
+
+        // 4. 【PC対応】マウスで押した時も沈ませる
+        btn.addEventListener('mousedown', () => btn.classList.add('is-pressed'));
+        btn.addEventListener('mouseup', () => btn.classList.remove('is-pressed'));
+        btn.addEventListener('mouseleave', () => btn.classList.remove('is-pressed')); // 枠外に逃げた時用
     });
+    applyButtonFeedback();
 }
 
 // 【シンプル版】まずはこれで動くか試してみてください
@@ -177,3 +179,37 @@ window.onerror = function(message, source, lineno, colno, error) {
     alert("エラー発生: " + message + " (行: " + lineno + ")");
     return false;
 };
+
+/**
+ * 画面上のすべてのボタンに「押し込み演出」を設定する共通関数
+ */
+function applyButtonFeedback() {
+    // ページ内のすべてのボタンを検索
+    const allButtons = document.querySelectorAll('button, .calc-btn, .back-menu-btn');
+
+    allButtons.forEach(btn => {
+        // すでに登録済みの場合はスキップ
+        if (btn.dataset.feedbackSet === "true") return;
+
+        const press = () => btn.classList.add('btn-pressed');
+        const release = () => btn.classList.remove('btn-pressed');
+
+        // スマホ用イベント
+        btn.addEventListener('touchstart', press, { passive: true });
+        btn.addEventListener('touchend', release);
+        btn.addEventListener('touchcancel', release);
+
+        // PC用イベント
+        btn.addEventListener('mousedown', press);
+        btn.addEventListener('mouseup', release);
+        btn.addEventListener('mouseleave', release);
+
+        // 登録済みフラグ
+        btn.dataset.feedbackSet = "true";
+    });
+}
+
+// ページ読み込み完了時に実行
+document.addEventListener('DOMContentLoaded', applyButtonFeedback);
+
+// setupCalculator() の最後にも applyButtonFeedback(); を追加してください

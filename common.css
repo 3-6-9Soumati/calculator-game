@@ -1,31 +1,23 @@
-/* common.css 全文 */
+/* --- 基本レイアウト --- */
 body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-align: center; margin: 0; }
 .page { display: none; }
-/* activeがついた時だけ表示 */
-.page.active { display: block;}
+.page.active { display: block; }
 
+/* --- メニュー・設定エリア --- */
 .menu-area { max-width: 600px; margin: auto; padding: 20px; background: white; border-radius: 12px; border: 2px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 .checkbox-group { display: flex; flex-wrap: wrap; gap: 5px; padding: 10px; border: 1px solid #ccc; margin: 10px auto; justify-content: center; max-width: 100%; background: #fafafa; }
 .mode-title { font-size: 1.2em; color: #2c3e50; margin-bottom: 15px; font-weight: bold; background: #ecf0f1; padding: 10px; border-radius: 5px; }
 
-/* スマホ用：縦に並べてスクロール可能にする */
-.game-container { 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center;
-    gap: 20px;
-    width: 100%;
-}
-
-/* PC（画面幅768px以上）の設定 */
+/* --- ゲームコンテナ（スマホ/PC切り替え） --- */
+.game-container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
 @media (min-width: 768px) {
-    .game-container { 
-        flex-direction: row; /* PCでは横並び */
-        align-items: flex-start;
-    }
+    .game-container { flex-direction: row; align-items: flex-start; }
 }
 
+/* --- メインエリア --- */
 .game-area { width: 100%; max-width: 500px; border: 2px solid #333; padding: 15px; background: white; border-radius: 8px; position: relative; min-height: 400px; box-sizing: border-box; }
+
+/* --- 電卓エリア全体 --- */
 .calc-area {
     width: 100%; 
     max-width: 360px; 
@@ -36,21 +28,32 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
     box-sizing: border-box;
     margin: 0 auto;
     position: relative;
-    z-index: 10; /* 999から下げて他の要素の邪魔をしないようにする */
-    touch-action: pan-y; /* 縦スクロールを許可 */
+    z-index: 10;
+    touch-action: pan-y;
 }
 
-button { padding: 10px 16px; cursor: pointer; margin: 2px; border-radius: 4px; border: 1px solid #999; font-size: 16px; }
-/* ボタンの見た目を整える */
+/* --- 【重要】すべてのボタンの共通設定 --- */
+/* モード選択、ゲーム開始、電卓、戻るボタンすべてを対象にします */
+button, .calc-btn, .back-menu-btn {
+    -webkit-tap-highlight-color: transparent; /* スマホの青い枠を消す */
+    cursor: pointer;
+    transition: transform 0.05s, filter 0.05s; /* 動きを滑らかに */
+    outline: none;
+}
+
+/* 押された時の「沈む」演出（filterを使うことで元の色を問いません） */
+.btn-pressed {
+    transform: translateY(2px) !important;
+    box-shadow: none !important;
+    filter: brightness(0.8) !important; /* 元の色を20%暗くする */
+}
+
+/* --- 電卓ボタンのデザイン --- */
 .calc-btn {
-    -webkit-tap-highlight-color: transparent; /* タップ時の青いハイライトを透明にする */
-    
-    /* 以下は既存の設定（維持してください） */
     display: inline-block;
-    /* widthを計算式（calc）にするのが一番確実です */
-    width: calc(25% - 8px); /* 25%から余白分を引く */
+    width: calc(25% - 8px); 
     height: 55px; 
-    margin: 4px 0; /* 左右の余白はflexが自動調整するので上下だけでOK */
+    margin: 4px 0; 
     font-size: 18px; 
     background: #fff; 
     border: 1px solid #999;
@@ -60,29 +63,33 @@ button { padding: 10px 16px; cursor: pointer; margin: 2px; border-radius: 4px; b
     box-sizing: border-box;
 }
 
-/* 計算実行ボタン（横長）の調整 */
 .calc-btn-wide {
-    width: 95% !important; /* ほぼ一行まるごと使う */
+    width: 95% !important; 
     margin: 8px auto !important;
     display: block;
 }
-/* ボタンを包む親要素の設定 */
+
 .calc-buttons-container {
-    display: flex;       /* フレックスボックスを有効化 */
-    flex-wrap: wrap;     /* 溢れたら次の行へ */
-    justify-content: space-between; /* 均等に並べる */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     width: 100%;
 }
 
+/* --- 入力・履歴エリア --- */
 #calcInput { width: 95%; height: 40px; font-size: 20px; margin-bottom: 10px; text-align: right; display: block; margin: 0 auto 10px; background: white; border: 1px solid #999; }
 .history-box { width: 95%; height: 80px; overflow-y: auto; border: 1px solid #ccc; background: white; margin: 0 auto 10px auto; font-size: 14px; text-align: left; }
 .rem-history { width: 95%; height: 70px; overflow-y: auto; border: 1px solid #ccc; background: white; margin: 5px auto; font-size: 13px; text-align: left; }
 
-.back-menu-btn { position: relative; margin-top: 20px; background: #666; color: white; border: none; width: 100%; }
+/* --- その他ボタン（メニューに戻る・回答・モード選択など） --- */
+.back-menu-btn { position: relative; margin-top: 20px; background: #666; color: white; border: none; width: 100%; border-radius: 4px; padding: 10px 16px; font-size: 16px; }
+
+/* 元のCSSにあるbuttonタグへのマージン設定なども維持 */
+button { padding: 10px 16px; margin: 2px; border-radius: 4px; border: 1px solid #999; font-size: 16px; }
+
 #question { font-size: 1.3em; font-weight: bold; margin: 20px 0; line-height: 1.4; }
-/* これを common.css の末尾などに追加 */
-.calc-btn:active {
-    transform: translateY(2px); /* 2px下に沈む */
-    box-shadow: none;           /* 立体感を消す */
-    background-color: #eee;    /* 少し色を濃くする */
+
+/* PCでのホバー（マウス乗せ）演出 */
+@media (hover: hover) {
+    button:hover, .calc-btn:hover { filter: brightness(0.95); }
 }
