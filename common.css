@@ -28,25 +28,37 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
 .game-area { width: 100%; max-width: 500px; border: 2px solid #333; padding: 15px; background: white; border-radius: 8px; position: relative; min-height: 400px; box-sizing: border-box; }
 .calc-area {
     width: 100%; 
-    max-width: 340px; 
+    max-width: 360px; 
     border: 2px solid #555; 
-    padding: 15px; 
+    padding: 10px; 
     background: #e0e0e0; 
     border-radius: 8px; 
     box-sizing: border-box;
+    margin: 0 auto;
     position: relative;
     z-index: 10; /* 999から下げて他の要素の邪魔をしないようにする */
     touch-action: pan-y; /* 縦スクロールを許可 */
 }
 
 button { padding: 10px 16px; cursor: pointer; margin: 2px; border-radius: 4px; border: 1px solid #999; font-size: 16px; }
+/* ボタンの見た目を整える */
 .calc-btn { 
-    width: 22%; 
-    height: 50px; 
+    width: 21%; /* 22%から少し減らして、余白分の隙間を作る */
+    height: 55px; /* 少し高くして押しやすく */
     font-size: 18px; 
     background: #fff; 
-    margin: 4px 1%; /* 2pxから変更：左右に隙間を作る */
-    touch-action: manipulation; /* ブラウザのズーム動作を抑制して反応を速くする */
+    margin: 4px 1.5%; /* 上下 4px, 左右 1.5% の余白 */
+    border: 1px solid #999;
+    border-radius: 6px;
+    box-shadow: 0 2px 0 #bbb; /* 少し立体感を出してボタンらしく */
+    touch-action: manipulation;
+    vertical-align: top;
+}
+/* 計算実行ボタン（横長）の調整 */
+.calc-btn-wide {
+    width: 95% !important; /* ほぼ一行まるごと使う */
+    margin: 8px auto !important;
+    display: block;
 }
 #calcInput { width: 95%; height: 40px; font-size: 20px; margin-bottom: 10px; text-align: right; display: block; margin: 0 auto 10px; background: white; border: 1px solid #999; }
 .history-box { width: 95%; height: 80px; overflow-y: auto; border: 1px solid #ccc; background: white; margin: 0 auto 10px auto; font-size: 14px; text-align: left; }
