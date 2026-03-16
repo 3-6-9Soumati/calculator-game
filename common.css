@@ -15,6 +15,7 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
 }
 
 /* --- メインエリア --- */
+/* --- メインエリアの修正 --- */
 .game-area {
     width: 100%;
     max-width: 500px;
@@ -23,13 +24,14 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
     background: white;
     border-radius: 8px;
     position: relative;
-    min-height: 520px; 
+    /* min-height: 520px; を削除し、auto にするか数値を小さくします */
+    min-height: auto; 
     display: flex;
     flex-direction: column;
-    /* justify-content: space-between; を使用している場合、これが下の空きを作ります */
-    /* 不要であれば、このプロパティを消すか、削除してください */
     justify-content: flex-start; 
     box-sizing: border-box;
+    /* 下側の余白を少し詰める */
+    padding-bottom: 5px;
 }
 
 /* --- 電卓エリア全体 --- */
@@ -56,9 +58,8 @@ button, .calc-btn, .back-menu-btn {
     outline: none;
 }
 
-/* 「メニューに戻る」ボタンを枠の最下部に固定したい場合 */
+/* 「メニューに戻る」ボタン固有のデザイン（ここに集約する） */
 .back-menu-btn {
-    /* margin-top: auto を削除 */
     background: #666;
     color: white;
     border: none;
@@ -66,6 +67,9 @@ button, .calc-btn, .back-menu-btn {
     border-radius: 4px;
     padding: 12px;
     font-size: 16px;
+    margin-top: 15px; /* ここを調整して上下の余白を制御 */
+    margin-bottom: 5px;
+    position: relative; /* 必要な場合のみ */
 }
 
 /* 押された時の「沈む」演出（filterを使うことで元の色を問いません） */
