@@ -183,23 +183,28 @@ window.onerror = function(message, source, lineno, colno, error) {
 /**
  * 画面上のすべてのボタンに「押し込み演出」を設定する共通関数
  */
+// common.js の applyButtonFeedback を強化
 function applyButtonFeedback() {
     const allButtons = document.querySelectorAll('button, .calc-btn, .back-menu-btn');
     allButtons.forEach(btn => {
-        // すでに登録済みなら何もしない
         if (btn.dataset.feedbackSet === "true") return;
 
-        const press = (e) => {
-            // クリックイベントの伝播を防がないように注意
-            btn.classList.add('btn-pressed');
-        };
+        const press = () => btn.classList.add('btn-pressed');
         const release = () => btn.classList.remove('btn-pressed');
 
+        // アニメーション用
+        btn.addEventListener('touchstart', press, { passive: true });
+        btn.addEventListener('touchend', release);
+        btn.addEventListener('touchcancel', release);
         btn.addEventListener('mousedown', press);
         btn.addEventListener('mouseup', release);
         btn.addEventListener('mouseleave', release);
-        btn.addEventListener('touchstart', press, { passive: true });
-        btn.addEventListener('touchend', release);
+
+        // ★スマホでの反応を確実にするための修正
+        // 電卓ボタン (.calc-btn) の場合、clickイベントが遅延しないように調整
+        if (btn.classList.contains('calc-btn')) {
+            btn.style.touchAction = "manipulation"; // ダブルタップズームを無効化して反応を速くする
+        }
         
         btn.dataset.feedbackSet = "true";
     });

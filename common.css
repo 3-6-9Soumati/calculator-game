@@ -3,8 +3,13 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
 .page { display: none; }
 .page.active { display: block; }
 
-/* --- メニュー・設定エリア --- */
-.menu-area { max-width: 600px; margin: auto; padding: 20px; background: white; border-radius: 12px; border: 2px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+/* 計算モード選択ボタンなど、メニュー内の他のボタンも同じ幅に */
+.menu-area button {
+    display: block;
+    width: 90%;
+    max-width: 400px;
+    margin: 10px auto;
+}
 .checkbox-group { display: flex; flex-wrap: wrap; gap: 5px; padding: 10px; border: 1px solid #ccc; margin: 10px auto; justify-content: center; max-width: 100%; background: #fafafa; }
 /* モードタイトル周りの余白調整 */
 .mode-title {
@@ -142,12 +147,14 @@ button, .calc-btn, .back-menu-btn {
 }
 
 /* メニュー内にあるすべてのボタンの幅を統一 */
-#menuPage button {
-    display: block;
-    width: 100%;           /* 横幅いっぱいに */
-    max-width: 400px;      /* 適切な最大幅を設定 */
-    margin: 10px auto;     /* 上下の間隔を確保 */
-    padding: 15px;
+#menuPage button,
+.back-menu-btn {
+    display: block !important;
+    width: 90% !important;           /* スマホでの基本幅 */
+    max-width: 400px !important;     /* PCでの最大幅を統一 */
+    margin: 15px auto !important;    /* 中央寄せと上下の間隔 */
+    padding: 15px !important;
     box-sizing: border-box;
-    font-size: 16px;
+    font-size: 1.1em;
+    cursor: pointer;
 }

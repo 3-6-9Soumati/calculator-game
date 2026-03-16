@@ -224,6 +224,51 @@
         generateQuestion();
     }
 
+    function toggleAll(name, checked) {
+        document.getElementsByName(name).forEach(e => e.checked = checked);
+    }
+
+    function createCheckboxes(label, id) {
+        let html = `<div>${label}</div><div class="btn-group" style="margin-bottom: 10px;">
+            <button onclick="toggleAll('${id}', true)" style="width: auto; padding: 5px 10px; margin: 2px; font-size: 0.9em;">全選択</button>
+            <button onclick="toggleAll('${id}', false)" style="width: auto; padding: 5px 10px; margin: 2px; font-size: 0.9em;">全解除</button>
+        </div>`;
+        html += `<div class="checkbox-group">`;
+        for(let i=2; i<=16; i++) {
+            html += `<label style="width:70px"><input type="checkbox" name="${id}" value="${i}" checked> ${i}進</label>`;
+        }
+        html += `</div>`;
+        return html;
+    }
+
+    function showSelection(mode) {
+        currentMode = mode;
+        let modeLabel = (mode === 'sameBase') ? "同じ進数同士の計算" : "異なる進数同士の計算";
+        let html = `<div class="mode-title">【${modeLabel}】</div>`;
+        
+        // 演算子選択
+        html += `<div>演算子の選択:</div><div class="checkbox-group">
+            <label><input type="checkbox" name="opIn" value="+" checked> ＋</label>
+            <label><input type="checkbox" name="opIn" value="-" checked> －</label>
+            <label><input type="checkbox" name="opIn" value="*" checked> ×</label>
+            <label><input type="checkbox" name="opIn" value="/" checked> ÷</label>
+        </div>`;
+        
+        html += `<div style="margin: 15px 0;"><label class="config-label"><input type="checkbox" id="noNegative" checked> マイナスにならないようにする</label></div>`;
+        
+        // ★進数選択（全選択ボタン付き）
+        html += createCheckboxes('対象とする進数:', 'nIn');
+        
+        // ★ゲーム開始ボタン（classを統一し、インラインstyleを削除）
+        html += `<br><button onclick="initGame()" class="back-menu-btn">ゲーム開始</button>`;
+        
+        document.getElementById('baseSelection').innerHTML = html;
+        
+        if (typeof applyButtonFeedback === 'function') {
+            applyButtonFeedback();
+        }
+    }
+
     function goBack() {
         const menu = document.getElementById('menuPage');
         const game = document.getElementById('gamePage');
