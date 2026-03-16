@@ -23,10 +23,12 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
     background: white;
     border-radius: 8px;
     position: relative;
-    /* 枠の高さを大きく固定 */
     min-height: 520px; 
     display: flex;
     flex-direction: column;
+    /* justify-content: space-between; を使用している場合、これが下の空きを作ります */
+    /* 不要であれば、このプロパティを消すか、削除してください */
+    justify-content: flex-start; 
     box-sizing: border-box;
 }
 
@@ -56,7 +58,7 @@ button, .calc-btn, .back-menu-btn {
 
 /* 「メニューに戻る」ボタンを枠の最下部に固定したい場合 */
 .back-menu-btn {
-    margin-top: auto; /* 上に自動で余白を作り、常に下へ押しやる */
+    /* margin-top: auto を削除 */
     background: #666;
     color: white;
     border: none;
@@ -105,9 +107,6 @@ button, .calc-btn, .back-menu-btn {
 #calcInput { width: 95%; height: 40px; font-size: 20px; margin-bottom: 10px; text-align: right; display: block; margin: 0 auto 10px; background: white; border: 1px solid #999; }
 .history-box { width: 95%; height: 80px; overflow-y: auto; border: 1px solid #ccc; background: white; margin: 0 auto 10px auto; font-size: 14px; text-align: left; }
 .rem-history { width: 95%; height: 70px; overflow-y: auto; border: 1px solid #ccc; background: white; margin: 5px auto; font-size: 13px; text-align: left; }
-
-/* --- その他ボタン（メニューに戻る・回答・モード選択など） --- */
-.back-menu-btn { position: relative; margin-top: 20px; background: #666; color: white; border: none; width: 100%; border-radius: 4px; padding: 10px 16px; font-size: 16px; }
 
 /* 元のCSSにあるbuttonタグへのマージン設定なども維持 */
 button { padding: 10px 16px; margin: 2px; border-radius: 4px; border: 1px solid #999; font-size: 16px; }
