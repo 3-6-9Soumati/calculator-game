@@ -42,7 +42,11 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
 
 button { padding: 10px 16px; cursor: pointer; margin: 2px; border-radius: 4px; border: 1px solid #999; font-size: 16px; }
 /* ボタンの見た目を整える */
-.calc-btn { 
+.calc-btn {
+    -webkit-tap-highlight-color: transparent; /* タップ時の青いハイライトを透明にする */
+    
+    /* 以下は既存の設定（維持してください） */
+    display: inline-block;
     /* widthを計算式（calc）にするのが一番確実です */
     width: calc(25% - 8px); /* 25%から余白分を引く */
     height: 55px; 
@@ -76,3 +80,9 @@ button { padding: 10px 16px; cursor: pointer; margin: 2px; border-radius: 4px; b
 
 .back-menu-btn { position: relative; margin-top: 20px; background: #666; color: white; border: none; width: 100%; }
 #question { font-size: 1.3em; font-weight: bold; margin: 20px 0; line-height: 1.4; }
+/* これを common.css の末尾などに追加 */
+.calc-btn:active {
+    transform: translateY(2px); /* 2px下に沈む */
+    box-shadow: none;           /* 立体感を消す */
+    background-color: #eee;    /* 少し色を濃くする */
+}
