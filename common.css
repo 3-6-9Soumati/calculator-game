@@ -10,6 +10,9 @@ body {
     padding: 10px; 
     text-align: center; 
     margin: 0; 
+    /* テキスト選択による誤作動防止 */
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .page { display: none; }
@@ -19,14 +22,14 @@ body {
 .menu-area {
     box-sizing: border-box;
     width: 100%;
-    max-width: 600px; /* メニュー全体の最大幅を制限して中央に寄せる */
+    max-width: 600px;
     margin: 0 auto;
     overflow-x: hidden;
 }
 
-/* --- ボタンの共通設定（影と立体感） --- */
+/* --- ボタンの共通設定（スマホ・PC両対応版） --- */
 button, .calc-btn, .back-menu-btn {
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent; /* タップ時の青い枠を消す */
     cursor: pointer;
     transition: transform 0.05s, filter 0.05s;
     outline: none;
@@ -36,6 +39,15 @@ button, .calc-btn, .back-menu-btn {
     padding: 10px 16px;
     font-size: 16px;
     box-shadow: 0 2px 0 #999;
+    text-decoration: none !important;
+    
+    /* スマホの反応改善と誤作動防止 */
+    touch-action: manipulation; 
+    -webkit-appearance: none;
+    appearance: none;
+    
+    /* iPhoneの勝手な青文字を防止しつつPCの色を維持 */
+    color: inherit;
 }
 
 /* 押された時の演出（全てのボタン共通） */
@@ -50,8 +62,8 @@ button, .calc-btn, .back-menu-btn {
 .back-menu-btn {
     display: block !important;
     width: 90% !important;
-    max-width: 320px !important; /* PCでも間延びしない適切な幅 */
-    margin: 12px auto !important; /* 中央寄せ */
+    max-width: 320px !important;
+    margin: 12px auto !important;
     padding: 12px !important;
     box-sizing: border-box;
     font-size: 1.05em;
@@ -68,7 +80,7 @@ button, .calc-btn, .back-menu-btn {
 
 .main-mode-select button { 
     flex: 1; 
-    max-width: 160px !important; /* 2つ並びの時は少し小さく */
+    max-width: 160px !important; 
     padding: 10px 5px !important; 
     margin: 0 !important; 
     font-size: 0.9em !important; 
@@ -89,15 +101,15 @@ button, .calc-btn, .back-menu-btn {
 /* チェックボックスのグループを中央寄せにする */
 .checkbox-group {
     display: flex;
-    flex-wrap: wrap;       /* 折り返しを許可 */
-    justify-content: center; /* ★中身を中央に寄せる */
-    gap: 12px;             /* 項目同士の間隔 */
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
     padding: 15px;
     border: 1px solid #ccc;
     background: #fafafa;
     border-radius: 8px;
     margin: 10px auto;
-    max-width: 450px;      /* チェックボックスエリア自体の幅を制限 */
+    max-width: 450px;
     box-sizing: border-box;
 }
 
@@ -106,7 +118,7 @@ button, .calc-btn, .back-menu-btn {
     align-items: center;
     gap: 5px;
     cursor: pointer;
-    white-space: nowrap;   /* 文字の途中で改行させない */
+    white-space: nowrap;
 }
 
 /* 全選択・解除ボタンを小さく横並びに */
@@ -161,6 +173,8 @@ button.small-btn {
     border-radius: 8px; 
     box-sizing: border-box;
     margin: 0 auto;
+    /* 内部の文字色を黒に強制（iPhone対策） */
+    color: #000 !important;
 }
 
 .calc-btn {
@@ -169,14 +183,26 @@ button.small-btn {
     height: 55px; 
     margin: 4px 0; 
     font-size: 18px; 
+    color: #000 !important;
 }
 
-#calcInput { width: 95%; height: 40px; font-size: 20px; text-align: right; display: block; margin: 0 auto 10px; background: white; border: 1px solid #999; }
-.history-box { width: 95%; height: 80px; overflow-y: auto; border: 1px solid #ccc; background: white; margin: 0 auto 10px; font-size: 14px; text-align: left; }
-.rem-history { width: 95%; height: 70px; overflow-y: auto; border: 1px solid #ccc; background: white; margin: 5px auto; font-size: 13px; text-align: left; }
+#calcInput { 
+    width: 95%; 
+    height: 40px; 
+    font-size: 20px; 
+    text-align: right; 
+    display: block; 
+    margin: 0 auto 10px; 
+    background: white; 
+    border: 1px solid #999; 
+    color: #000;
+}
+
+.history-box { width: 95%; height: 80px; overflow-y: auto; border: 1px solid #ccc; background: white; margin: 0 auto 10px; font-size: 14px; text-align: left; color: #333; }
+.rem-history { width: 95%; height: 70px; overflow-y: auto; border: 1px solid #ccc; background: white; margin: 5px auto; font-size: 13px; text-align: left; color: #333; }
 
 /* --- その他 --- */
-#question { font-size: 1.3em; font-weight: bold; margin: 20px 0; }
+#question { font-size: 1.3em; font-weight: bold; margin: 20px 0; color: #333; }
 #feedback { min-height: 1.5em; font-size: 1.3em; margin: 10px 0; }
 .rule-box { height: 30px; color: red; font-weight: bold; font-size: 0.9em; display: flex; align-items: center; justify-content: center; }
 .hidden { visibility: hidden; }

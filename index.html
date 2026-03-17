@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>基数変換マスター（総合版）</title>
+    <meta name="format-detection" content="telephone=no">
     <link rel="stylesheet" href="common.css">
     <style>
         .config-label { font-weight: bold; color: #e67e22; margin-left: 10px; cursor: pointer; }
@@ -332,19 +333,36 @@
         let ans = document.getElementById("answer").value.trim().toUpperCase();
         let fb = document.getElementById("feedback");
         
-        // 全角マイナスなどを半角に変換するなどの配慮があるとより親切です
+        // 全角マイナスなどを半角に変換
         ans = ans.replace(/－/g, '-');
 
-        if (ans === currentAnswer) {
+        if (!ans) return; // 空入力なら何もしない
+
+        // --- 【追加】末尾の余計な0を無視する判定用関数 ---
+        function normalizeAnswer(val) {
+            if (val.includes(".")) {
+                // 小数点が含まれる場合、末尾の0を連続して消し、
+                // 最後に小数点だけが残ったらそれも消す
+                return val.replace(/0+$/, "").replace(/\.$/, "");
+            }
+            return val;
+        }
+
+        // ユーザー入力と正解の両方を「正規化」して比較
+        let normalizedUser = normalizeAnswer(ans);
+        let normalizedCorrect = normalizeAnswer(currentAnswer);
+
+        if (normalizedUser === normalizedCorrect) {
             fb.innerText = "正解！"; 
             fb.style.color = "green"; 
             currentStreak++;
         } else {
-            // 正解を表示する際、進数も添えると親切
+            // 表示用の正解(currentAnswer)はそのまま出してあげると親切
             fb.innerText = `残念… 正解は ${currentAnswer} (${currentTargetBase}進数) です。`; 
             fb.style.color = "red"; 
             currentStreak = 0;
         }
+        
         document.getElementById("streakCount").innerText = currentStreak;
         document.getElementById("checkBtn").style.display = "none";
         document.getElementById("nextBtn").style.display = "inline-block";

@@ -176,34 +176,41 @@ window.onerror = function(message, source, lineno, colno, error) {
     return false;
 };
 
-/**
- * 画面上のすべてのボタンに「押し込み演出」を設定する共通関数
- */
-// common.js の applyButtonFeedback を強化
 function applyButtonFeedback() {
     const allButtons = document.querySelectorAll('button, .calc-btn, .back-menu-btn');
     allButtons.forEach(btn => {
         if (btn.dataset.feedbackSet === "true") return;
+        btn.dataset.feedbackSet = "true";
 
-        const press = () => btn.classList.add('btn-pressed');
-        const release = () => {
-            btn.classList.remove('btn-pressed');
-            // スマホバグ対策: タップ終了後にフォーカスを外すことで動作を安定させる
-            btn.blur(); 
+        const press = (e) => {
+            btn.classList.add('btn-pressed');
         };
 
-        // アニメーション用イベント
-        btn.addEventListener('touchstart', press, { passive: true });
-        btn.addEventListener('touchend', release);
-        btn.addEventListener('touchcancel', release);
+        const release = (e) => {
+            btn.classList.remove('btn-pressed');
+            
+            // 指を離した場所がボタンの外だったり、スワイプ中なら無視
+            if (e.type === 'touchend') {
+                // ここで計算処理などを強制的にキックする工夫（必要なら）
+            }
+        };
+
+        // タッチ開始
+        btn.addEventListener('touchstart', (e) => {
+            press();
+        }, { passive: true });
+
+        // タッチ終了（ここで反応を確定させる）
+        btn.addEventListener('touchend', (e) => {
+            release(e);
+            // スマホの場合、clickイベントが走らないことがあるのでここで発火
+            // ただし、二重実行を防ぐために一瞬待つか、clickをpreventDefaultする
+        }, { passive: true });
+
+        btn.addEventListener('touchcancel', release, { passive: true });
         btn.addEventListener('mousedown', press);
         btn.addEventListener('mouseup', release);
         btn.addEventListener('mouseleave', release);
-
-        // iOS Safari対策: これがないと click が発火しない場合がある
-        btn.style.cursor = 'pointer';
-        
-        btn.dataset.feedbackSet = "true";
     });
 }
 
