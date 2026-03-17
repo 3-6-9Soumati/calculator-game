@@ -119,6 +119,11 @@ button, .calc-btn, .back-menu-btn {
     gap: 5px;
     cursor: pointer;
     white-space: nowrap;
+    
+    /* --- ここを追加・修正 --- */
+    width: 80px;         /* 各ラベルの幅を固定する（これでチェック位置が揃う） */
+    justify-content: flex-start; /* 左詰めに配置 */
+    margin: 2px 0;       /* 上下に少し隙間を作る */
 }
 
 /* 全選択・解除ボタンを小さく横並びに */
