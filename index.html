@@ -3,284 +3,382 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>基数変換マスター（計算編）</title>
-    <link rel="stylesheet" href="common.css?ver=104">
+    <title>基数変換マスター（総合版）</title>
+    <link rel="stylesheet" href="common.css">
     <style>
         .config-label { font-weight: bold; color: #e67e22; margin-left: 10px; cursor: pointer; }
         #targetHint { font-weight: bold; font-size: 1.1em; color: #2980b9; margin-left: 10px; }
         #streakCount { color: #e67e22; font-weight: bold; }
+        
+        /* モード切り替えボタン用のデザイン */
+        .main-mode-select { 
+            display: flex; 
+            gap: 10px; 
+            justify-content: center; 
+            margin-bottom: 15px; 
+        }
+        .main-mode-select button { 
+            flex: 1; 
+            max-width: 180px; 
+            padding: 12px 5px !important; 
+            margin: 0 !important; 
+            font-size: 0.95em !important; 
+        }
+        .main-mode-select button:hover { filter: brightness(1.2); }
+        
+        #currentMainModeDisplay {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin: 10px 0;
+            padding: 5px;
+            color: #2c3e50;
+        }
+
+        /* 全選択・全解除ボタンを小さく横並びに */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .small-btn {
+            width: 80px !important; 
+            padding: 5px !important;
+            margin: 0 !important;
+            font-size: 0.8em !important;
+            display: inline-block !important;
+        }
     </style>
 </head>
 <body>
 
 <div id="menuPage" class="page active">
     <div class="menu-area">
-        <h1>基数変換マスター（計算編）</h1>
-        <p>計算モードを選択してください</p>
-        <button onclick="showSelection('sameBase')">同じ進数同士の計算</button>
-        <button onclick="showSelection('diffBase')">異なる進数同士の計算</button>
-        <div id="baseSelection" style="margin-top: 20px;"></div>
+        <h1>基数変換マスター</h1>
+        
+        <div class="main-mode-select">
+            <button onclick="setMainMode('calc')" class="back-menu-btn" style="background: #e67e22;">計算トレーニング</button>
+            <button onclick="setMainMode('convert')" class="back-menu-btn" style="background: #8e44ad;">変換トレーニング</button>
+        </div>
+
+        <hr style="border: 0; border-top: 2px dashed #ccc; margin: 20px 0;">
+
+        <div id="currentMainModeDisplay">上のボタンから種類を選んでください</div>
+
+        <div id="subModeSelection"></div>
+        <div id="baseSelection" style="width: 100%; box-sizing: border-box;"></div>
     </div>
 </div>
 
 <div id="gamePage" class="page" style="display: none;">
     <div class="game-container">
         <div class="game-area">
-                <h1 style="margin: 5px 0;">問題</h1>
-                <p style="margin: 5px 0;">連続正解数: <span id="streakCount">0</span></p>
-                <p id="question" style="min-height: 2em; margin: 5px 0;"></p> 
-                
-                <div id="ruleBox" class="rule-box">
-                    <div id="ruleText"></div>
-                </div>
-
-                <div style="margin: 5px 0;">
-                    <input type="text" id="answer" placeholder="答えを入力" style="font-size: 1.3em; padding: 10px; width: 200px;">
-                    <span id="targetHint"></span>
-                </div>
-                
-                <div style="height: 50px; margin: 5px 0;">
-                    <button id="checkBtn" onclick="check()" style="font-size: 1.1em; padding: 10px 25px; background: #3498db; color: white; border: none; border-radius: 5px;">回答</button>
-                    <button id="nextBtn" onclick="generateQuestion()" style="display: none; font-size: 1.1em; padding: 10px 25px; background: #2ecc71; color: white; border: none; border-radius: 5px;">次の問題</button>
-                </div>
-                
-                <p id="feedback" style="min-height: 1.5em; margin: 5px 0;"></p>
-                
-                <button class="back-menu-btn" onclick="goBack()">メニューに戻る</button>
+            <h1 style="margin: 5px 0;">問題</h1>
+            <p style="margin: 5px 0;">連続正解数: <span id="streakCount">0</span></p>
+            <p id="question" style="min-height: 2em; margin: 5px 0; font-size: 1.5em; font-weight: bold;"></p> 
+            
+            <div id="ruleBox" class="rule-box hidden">
+                <div id="ruleText">※小数第3位まで求めてください（第4位切捨）</div>
             </div>
+
+            <div style="margin: 5px 0;">
+                <input type="text" id="answer" placeholder="答えを入力" style="font-size: 1.3em; padding: 10px; width: 200px;">
+                <span id="targetHint"></span>
+            </div>
+            
+            <div style="height: 50px; margin: 15px 0;">
+                <button id="checkBtn" onclick="check()" style="font-size: 1.1em; padding: 10px 25px; background: #3498db; color: white; border: none; border-radius: 5px;">回答</button>
+                <button id="nextBtn" onclick="generateQuestion()" style="display: none; font-size: 1.1em; padding: 10px 25px; background: #2ecc71; color: white; border: none; border-radius: 5px;">次の問題</button>
+            </div>
+            
+            <p id="feedback" style="min-height: 1.5em; margin: 5px 0; font-size: 1.3em;"></p>
+            
+            <button class="back-menu-btn" onclick="goBack()">メニューに戻る</button>
+        </div>
         <div id="calculator-placeholder"></div>
     </div>
 </div>
 
-<script src="common.js?ver=104"></script>
+<script src="common.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        initializeCalculator();
-    });
-    let currentMode = "";
+    // === グローバル変数 (let を使う) ===
+    let mainMode = ""; 
+    let currentSubMode = ""; 
     let currentAnswer = "";
     let currentAnswerAlt = "";
     let currentTargetBase = 10;
     let currentStreak = 0;
 
-    // 割り算の際の小数変換ロジック
-    function convertToBaseWithFloat(num, base, precision = 3) {
-        let isNegative = num < 0;
-        let absNum = Math.abs(num);
-        let integerPart = Math.floor(absNum);
-        let fractionalPart = absNum - integerPart;
-        let res = integerPart.toString(base);
-        
-        let fracStr = "";
-        for (let i = 0; i < precision; i++) {
-            fractionalPart *= base;
-            let digit = Math.floor(fractionalPart);
-            fracStr += digit.toString(base);
-            fractionalPart -= digit;
+    // === 初期化 ===
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof initializeCalculator === 'function') {
+            initializeCalculator();
         }
-        
-        let fullRes = (isNegative ? "-" : "") + res + "." + fracStr;
-        let shortFrac = fracStr.replace(/0+$/, "");
-        let shortRes = (isNegative ? "-" : "") + res + (shortFrac === "" ? "" : "." + shortFrac);
-        
-        return { full: fullRes.toUpperCase(), short: shortRes.toUpperCase() };
-    }
+    });
 
-
-
-    // 問題生成ロジック（1以下除外版）
-    function generateQuestion() {
-        if (typeof clearCalculator === 'function') {
-            clearCalculator();
-        }
-        const ruleText = document.getElementById("ruleText");
-        ruleText.innerHTML = "※小数第3位まで求めてください（第4位切捨）";
-        let nList = [];
-        document.getElementsByName('nIn').forEach(e => { if(e.checked) nList.push(parseInt(e.value)); });
-        let opList = [];
-        document.getElementsByName('opIn').forEach(e => { if(e.checked) opList.push(e.value); });
-        
-        if (nList.length === 0 || opList.length === 0) return;
-
-        let valA, valB, decAns, op, opSymbol, baseA, baseB;
-        
-        // 1以下の結果を除外するためのループ
-        while(true) {
-            baseA = nList[Math.floor(Math.random() * nList.length)];
-            baseB = (currentMode === 'sameBase') ? baseA : nList[Math.floor(Math.random() * nList.length)];
-            op = opList[Math.floor(Math.random() * opList.length)];
-            valA = Math.floor(Math.random() * 50) + 1;
-            valB = Math.floor(Math.random() * 50) + 1;
-            
-            if (op === '+') { 
-                decAns = valA + valB; opSymbol = "＋"; 
-                ruleText.classList.add("hidden"); // 見えなくする（高さは維持される） 
-            }
-            else if (op === '-') { 
-                if (document.getElementById('noNegative') && document.getElementById('noNegative').checked && valA < valB)
-                    [valA, valB] = [valB, valA];
-                decAns = valA - valB; 
-                opSymbol = "－";
-                ruleText.classList.add("hidden"); // 見えなくする（高さは維持される） 
-            }
-            else if (op === '*') { 
-                decAns = valA * valB; 
-                opSymbol = "×";
-                ruleText.classList.add("hidden"); // 見えなくする（高さは維持される）  
-            }
-            else if (op === '/') { 
-                decAns = valA / valB; 
-                opSymbol = "÷"; 
-                ruleText.classList.remove("hidden");
-            }
-
-            // 【追加機能】答えが1以下（0以下または1）の場合は再生成
-            if (op === '/' && decAns <= 1) continue;
-            
-            break;
-        }
-
-        currentTargetBase = (currentMode === 'sameBase') ? baseA : 10;
-        
-        if (op === '/') {
-            let formats = convertToBaseWithFloat(decAns, currentTargetBase, 3);
-            currentAnswer = formats.full;
-            currentAnswerAlt = formats.short;
-        } else {
-            currentAnswer = decAns.toString(currentTargetBase).toUpperCase();
-            currentAnswerAlt = currentAnswer;
-        }
-
-        document.getElementById("question").innerText = 
-            `${valA.toString(baseA).toUpperCase()} (${baseA}) ${opSymbol} ${valB.toString(baseB).toUpperCase()} (${baseB}) = ?`;
-        
-        document.getElementById("targetHint").innerText = `(${currentTargetBase}進数で回答)`;
-        document.getElementById("answer").value = "";
-        document.getElementById("feedback").innerText = "";
-        document.getElementById("checkBtn").style.display = "inline-block";
-        document.getElementById("nextBtn").style.display = "none";
-    }
-
-    // 回答チェック
-    function check() {
-        let ans = document.getElementById("answer").value.trim().toUpperCase();
-        let fb = document.getElementById("feedback");
-        
-        if (ans === currentAnswer || ans === currentAnswerAlt) {
-            fb.innerText = "正解！ 素晴らしい計算力です！";
-            fb.style.color = "green";
-            currentStreak++;
-        } else {
-            fb.innerText = `残念… 正解は ${currentAnswer} です。`;
-            fb.style.color = "red";
-            currentStreak = 0;
-        }
-        document.getElementById("streakCount").innerText = currentStreak;
-        document.getElementById("checkBtn").style.display = "none";
-        document.getElementById("nextBtn").style.display = "inline-block";
-    }
-    // 画面表示切替（showSelection, initGame 等は省略せず維持）
-    function showSelection(mode) {
-        currentMode = mode;
-        let modeLabel = (mode === 'sameBase') ? "同じ進数同士の計算" : "異なる進数同士の計算";
-        let html = `<div class="mode-title">【${modeLabel}】</div>`;
-        html += `<div>演算子の選択:</div><div class="checkbox-group">
-            <label><input type="checkbox" name="opIn" value="+" checked> ＋</label>
-            <label><input type="checkbox" name="opIn" value="-" checked> －</label>
-            <label><input type="checkbox" name="opIn" value="*" checked> ×</label>
-            <label><input type="checkbox" name="opIn" value="/" checked> ÷</label>
-        </div>`;
-        html += `<div style="margin: 15px 0;"><label class="config-label"><input type="checkbox" id="noNegative" checked> マイナスにならないようにする</label></div>`;
-        html += `<div>対象とする進数:</div><div class="checkbox-group">`;
-        for(let i=2; i<=16; i++) html += `<label style="width:70px"><input type="checkbox" name="nIn" value="${i}" checked> ${i}進</label>`;
-        html += `</div><br><button onclick="initGame()"class="back-menu-btn" style="width: auto;">ゲーム開始</button>`;
-        document.getElementById('baseSelection').innerHTML = html;
-        if (typeof applyButtonFeedback === 'function') {
-            applyButtonFeedback();
-        }
-    }
-
-    function initGame() {
-        const placeholder = document.getElementById('calculator-placeholder');
-        // 電卓が空なら生成
-        if (placeholder && placeholder.innerHTML.trim() === "") {
-            if (typeof setupCalculator === 'function') {
-                setupCalculator();
-            }
-        }
-
-        // 表示切り替え
-        document.getElementById('menuPage').style.display = 'none';
-        document.getElementById('gamePage').style.display = 'block';
-
-        // ★重要：電卓生成後にイベントを強制再登録
-        if (typeof applyButtonFeedback === 'function') {
-            applyButtonFeedback();
-        }
-        if (typeof currentStreak !== 'undefined') currentStreak = 0;
-        const streakElement = document.getElementById("streakCount");
-        if (streakElement) streakElement.innerText = 0;
-        
-        generateQuestion();
-    }
-
-    function toggleAll(name, checked) {
-        document.getElementsByName(name).forEach(e => e.checked = checked);
-    }
-
-    // 進数選択エリアのHTMLを生成するヘルパー関数
-    function createCheckboxes(label, id) {
-        let html = `<div>${label}</div><div class="btn-group" style="margin-bottom: 10px; text-align: center;">
+    // 進数選択チェックボックスの生成
+    function createCheckboxes(label, id, include10 = true) {
+        let html = `<div style="margin-top:15px; font-weight:bold;">${label}</div>`;
+        html += `<div class="btn-group">
             <button onclick="toggleAll('${id}', true)" class="small-btn">全選択</button>
             <button onclick="toggleAll('${id}', false)" class="small-btn">全解除</button>
         </div>`;
         html += `<div class="checkbox-group">`;
         for(let i=2; i<=16; i++) {
-            // style="width:70px" を削除し、CSSのグリッドに任せる
+            if (!include10 && i === 10) continue;
             html += `<label><input type="checkbox" name="${id}" value="${i}" checked> ${i}進</label>`;
         }
         html += `</div>`;
         return html;
     }
 
-    function showSelection(mode) {
-        currentMode = mode;
-        let modeLabel = (mode === 'sameBase') ? "同じ進数同士の計算" : "異なる進数同士の計算";
-        let html = `<div class="mode-title">【${modeLabel}】</div>`;
-        
-        // 演算子選択
-        html += `<div>演算子の選択:</div><div class="checkbox-group">
-            <label><input type="checkbox" name="opIn" value="+" checked> ＋</label>
-            <label><input type="checkbox" name="opIn" value="-" checked> －</label>
-            <label><input type="checkbox" name="opIn" value="*" checked> ×</label>
-            <label><input type="checkbox" name="opIn" value="/" checked> ÷</label>
-        </div>`;
-        
-        html += `<div style="margin: 15px 0;"><label class="config-label"><input type="checkbox" id="noNegative" checked> マイナスにならないようにする</label></div>`;
-        
-        // ★進数選択（全選択ボタン付き）
-        html += createCheckboxes('対象とする進数:', 'nIn');
-        
-        // ★ゲーム開始ボタン（classを統一し、インラインstyleを削除）
-        html += `<br><button onclick="initGame()" class="back-menu-btn">ゲーム開始</button>`;
-        
-        document.getElementById('baseSelection').innerHTML = html;
-        
-        if (typeof applyButtonFeedback === 'function') {
-            applyButtonFeedback();
+    // 大分類を選択
+    function setMainMode(mode) {
+        mainMode = mode;
+        const display = document.getElementById('currentMainModeDisplay');
+        let html = "";
+
+        if (mode === 'calc') {
+            display.innerText = "【計算トレーニング】を選択中";
+            display.style.color = "#e67e22";
+            html = `
+                <button onclick="showSelection('sameBase')">同じ進数同士の計算</button>
+                <button onclick="showSelection('diffBase')">異なる進数同士の計算</button>`;
+        } else {
+            display.innerText = "【変換トレーニング】を選択中";
+            display.style.color = "#8e44ad";
+            html = `
+                <button onclick="showSelection('10toN')">10進数 → n進数</button>
+                <button onclick="showSelection('Nto10')">n進数 → 10進数</button>
+                <button onclick="showSelection('NtoM')">n進数 → m進数</button>`;
         }
+        document.getElementById('subModeSelection').innerHTML = html;
+        document.getElementById('baseSelection').innerHTML = ""; 
+        if (typeof applyButtonFeedback === 'function') applyButtonFeedback();
+    }
+
+    // 詳細設定（進数選択）を表示
+    function showSelection(subMode) {
+        currentSubMode = subMode;
+        let html = "";
+        
+        if (mainMode === 'calc') {
+            let modeLabel = (subMode === 'sameBase') ? "同じ進数同士の計算" : "異なる進数同士の計算";
+            html += `<div class="mode-title">【${modeLabel}】</div>`;
+            html += `<div>演算子の選択:</div><div class="checkbox-group">
+                <label><input type="checkbox" name="opIn" value="+" checked> ＋</label>
+                <label><input type="checkbox" name="opIn" value="-" checked> －</label>
+                <label><input type="checkbox" name="opIn" value="*" checked> ×</label>
+                <label><input type="checkbox" name="opIn" value="/" checked> ÷</label>
+            </div>`;
+            html += `<div style="margin: 15px 0;"><label class="config-label"><input type="checkbox" id="noNegative" checked> マイナスにならないようにする</label></div>`;
+            html += createCheckboxes('対象とする進数:', 'nIn', true);
+        } else {
+            let modeLabel = subMode === '10toN' ? "10進数 → n進数" : (subMode === 'Nto10' ? "n進数 → 10進数" : "n進数 → m進数");
+            html += `<div class="mode-title">【${modeLabel}】</div>`;
+            if (subMode === 'NtoM') {
+                html += createCheckboxes('変換元 (n):', 'nIn', true) + createCheckboxes('変換先 (m):', 'mIn', true);
+            } else {
+                html += createCheckboxes('対象の進数を選択:', 'nIn', false);
+            }
+        }
+        
+        html += `<br><button onclick="initGame()" class="back-menu-btn">ゲーム開始</button>`;
+        document.getElementById('baseSelection').innerHTML = html;
+        if (typeof applyButtonFeedback === 'function') applyButtonFeedback();
+    }
+
+    function initGame() {
+        const nCheckboxes = document.querySelectorAll('input[name="nIn"]:checked');
+        const mCheckboxes = document.querySelectorAll('input[name="mIn"]:checked');
+
+        // 1. 何も選ばれていないチェック
+        if (nCheckboxes.length === 0) {
+            alert("変換元の進数を選択してください。");
+            return;
+        }
+        if (mainMode === 'convert' && currentSubMode === 'NtoM' && mCheckboxes.length === 0) {
+            alert("変換先の進数を選択してください。");
+            return;
+        }
+
+        // 2. n→m進数変換で、同じ進数が1つずつしか選ばれていない場合のチェック
+        if (mainMode === 'convert' && currentSubMode === 'NtoM') {
+            if (nCheckboxes.length === 1 && mCheckboxes.length === 1) {
+                if (nCheckboxes[0].value === mCheckboxes[0].value) {
+                    alert("変換前と後で異なる進数を選択してください。");
+                    return; // ここで中断するので画面が切り替わらない
+                }
+            }
+        }
+
+        window.scrollTo(0, 0);
+        document.getElementById('menuPage').style.display = 'none';
+        document.getElementById('gamePage').style.display = 'block';
+        document.getElementById('menuPage').classList.remove('active');
+        document.getElementById('gamePage').classList.add('active');
+
+        if (typeof applyButtonFeedback === 'function') applyButtonFeedback();
+        currentStreak = 0;
+        document.getElementById("streakCount").innerText = 0;
+        generateQuestion();
     }
 
     function goBack() {
-        const menu = document.getElementById('menuPage');
-        const game = document.getElementById('gamePage');
-        
-        if (game) game.style.display = 'none'; // ゲームを消す
-        if (menu) menu.style.display = 'block'; // メニューを出す
-
-        game.classList.remove('active');
-        menu.classList.add('active');
+        window.scrollTo(0, 0);
+        document.getElementById('gamePage').style.display = 'none';
+        document.getElementById('menuPage').style.display = 'block';
+        document.getElementById('gamePage').classList.remove('active');
+        document.getElementById('menuPage').classList.add('active');
     }
+
+    function generateQuestion() {
+        if (typeof clearCalculator === 'function') clearCalculator();
+        document.getElementById("answer").value = "";
+        document.getElementById("feedback").innerText = "";
+        document.getElementById("checkBtn").style.display = "inline-block";
+        document.getElementById("nextBtn").style.display = "none";
+        document.getElementById("ruleBox").classList.add("hidden");
+        document.getElementById("targetHint").innerText = "";
+
+        if (mainMode === 'calc') {
+            generateCalcQuestion();
+        } else {
+            generateConvQuestion();
+        }
+    }
+
+    function generateCalcQuestion() {
+        let nList = [];
+        document.getElementsByName('nIn').forEach(e => { if(e.checked) nList.push(parseInt(e.value)); });
+        let opList = [];
+        document.getElementsByName('opIn').forEach(e => { if(e.checked) opList.push(e.value); });
+        
+        if (nList.length === 0 || opList.length === 0) { 
+            alert("進数と演算子を選択してください"); 
+            goBack();
+            return; 
+        }
+
+        let valA, valB, decAns, op, opSymbol, baseA, baseB;
+        baseA = nList[Math.floor(Math.random() * nList.length)];
+        baseB = (currentSubMode === 'sameBase') ? baseA : nList[Math.floor(Math.random() * nList.length)];
+        op = opList[Math.floor(Math.random() * opList.length)];
+        
+        valA = Math.floor(Math.random() * 50) + 1;
+        valB = Math.floor(Math.random() * 50) + 1;
+        
+        // 注意書き（ruleBox）のリセット
+        document.getElementById("ruleBox").classList.add("hidden");
+
+        if (op === '+') { decAns = valA + valB; opSymbol = "＋"; }
+        else if (op === '-') { 
+            if (document.getElementById('noNegative')?.checked && valA < valB) [valA, valB] = [valB, valA];
+            decAns = valA - valB; opSymbol = "－";
+        }
+        else if (op === '*') { decAns = valA * valB; opSymbol = "×"; }
+        else if (op === '/') { 
+            decAns = valA / valB; 
+            opSymbol = "÷";
+            // 小数の場合は注意書きを表示
+            document.getElementById("ruleBox").classList.remove("hidden");
+        }
+
+        currentTargetBase = (currentSubMode === 'sameBase') ? baseA : 10;
+
+        // --- 小数処理の追加 ---
+        if (op === '/' && decAns % 1 !== 0) {
+            // 10進数以外の割り算は非常に難解なため、基本は10進数での回答、
+            // または指定した進数で小数第3位まで求める処理を行う
+            currentAnswer = decimalToBase(decAns, currentTargetBase, 3);
+        } else {
+            currentAnswer = decAns.toString(currentTargetBase).toUpperCase();
+        }
+        
+        document.getElementById("question").innerText = `${valA.toString(baseA).toUpperCase()}(${baseA}) ${opSymbol} ${valB.toString(baseB).toUpperCase()}(${baseB}) = ?`;
+        document.getElementById("targetHint").innerText = `(${currentTargetBase}進数で回答)`;
+    }
+
+    // index.html 内の generateConvQuestion を書き換え
+    function generateConvQuestion() {
+        let nList = [], mList = [];
+        document.getElementsByName('nIn').forEach(e => { if(e.checked) nList.push(parseInt(e.value)); });
+        if(currentSubMode === 'NtoM') document.getElementsByName('mIn').forEach(e => { if(e.checked) mList.push(parseInt(e.value)); });
+
+        let baseN = nList[Math.floor(Math.random() * nList.length)];
+        let baseM = currentSubMode === '10toN' ? baseN : (currentSubMode === 'Nto10' ? 10 : mList[Math.floor(Math.random() * mList.length)]);
+        if (currentSubMode === '10toN') baseN = 10;
+
+        // --- 【修正】同じ進数が選ばれた時の処理 ---
+        if (baseN === baseM) {
+            // 他に選択肢がある場合だけやり直す
+            if (nList.length > 1 || mList.length > 1 || (currentSubMode === 'NtoM' && (nList[0] !== mList[0]))) {
+                generateConvQuestion(); 
+                return;
+            } else {
+                // 万が一、脱出不能な設定でここまで来たらメニューに戻す（安全策）
+                alert("進数設定に問題があります。");
+                goBack();
+                return;
+            }
+        }
+
+        let val = Math.floor(Math.random() * 255) + 1;
+        document.getElementById("question").innerText = `${baseN}進数の ${val.toString(baseN).toUpperCase()} を ${baseM}進数にすると？`;
+        currentAnswer = val.toString(baseM).toUpperCase();
+    }
+
+    function check() {
+        let ans = document.getElementById("answer").value.trim().toUpperCase();
+        let fb = document.getElementById("feedback");
+        
+        // 全角マイナスなどを半角に変換するなどの配慮があるとより親切です
+        ans = ans.replace(/－/g, '-');
+
+        if (ans === currentAnswer) {
+            fb.innerText = "正解！"; 
+            fb.style.color = "green"; 
+            currentStreak++;
+        } else {
+            // 正解を表示する際、進数も添えると親切
+            fb.innerText = `残念… 正解は ${currentAnswer} (${currentTargetBase}進数) です。`; 
+            fb.style.color = "red"; 
+            currentStreak = 0;
+        }
+        document.getElementById("streakCount").innerText = currentStreak;
+        document.getElementById("checkBtn").style.display = "none";
+        document.getElementById("nextBtn").style.display = "inline-block";
+    }
+
+    // 数値(dec)を指定した進数(base)の小数第3位(precision)まで変換する
+    /**
+    * 10進数の数値を、任意の進数の小数第n位までに変換する
+    */
+    function decimalToBase(dec, base, precision) {
+        let integerPart = Math.floor(Math.abs(dec));
+        let fractionalPart = Math.abs(dec) - integerPart;
+        
+        // 整数部の変換
+        let res = integerPart.toString(base).toUpperCase();
+        if (dec < 0) res = "-" + res;
+
+        if (fractionalPart > 0) {
+            res += ".";
+            for (let i = 0; i < precision; i++) {
+                fractionalPart *= base;
+                let digit = Math.floor(fractionalPart + 0.0000000001); // 浮動小数点誤差の補正
+                res += digit.toString(base).toUpperCase();
+                fractionalPart -= digit;
+            }
+        }
+        
+        // 末尾の不要な0をカット（例: 1.500 -> 1.5）
+        if (res.includes(".")) {
+            res = res.replace(/0+$/, "").replace(/\.$/, "");
+        }
+        return res;
+    }
+
 </script>
 </body>
 </html>

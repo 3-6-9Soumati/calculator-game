@@ -1,7 +1,3 @@
-/**
- * 基数変換マスター 共通ロジックファイル (common.js)
- */
-
 // 1. 電卓のHTMLを自動挿入する関数
 function setupCalculator() {
     const placeholder = document.getElementById('calculator-placeholder');

@@ -1,17 +1,80 @@
 /* --- 基本レイアウト --- */
-body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-align: center; margin: 0; }
+html {
+    /* 画面のガタつき防止：常に垂直スクロールバーの溝を表示しておく */
+    overflow-y: scroll;
+}
+
+body { 
+    font-family: sans-serif; 
+    background-color: #f4f4f9; 
+    padding: 10px; 
+    text-align: center; 
+    margin: 0; 
+}
+
 .page { display: none; }
 .page.active { display: block; }
 
-/* 計算モード選択ボタンなど、メニュー内の他のボタンも同じ幅に */
-.menu-area button {
-    display: block;
-    width: 90%;
-    max-width: 400px;
-    margin: 10px auto;
+/* メニューエリア全体の幅制限（安定化） */
+.menu-area {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 600px; /* メニュー全体の最大幅を制限して中央に寄せる */
+    margin: 0 auto;
+    overflow-x: hidden;
 }
-.checkbox-group { display: flex; flex-wrap: wrap; gap: 5px; padding: 10px; border: 1px solid #ccc; margin: 10px auto; justify-content: center; max-width: 100%; background: #fafafa; }
-/* モードタイトル周りの余白調整 */
+
+/* --- ボタンの共通設定（影と立体感） --- */
+button, .calc-btn, .back-menu-btn {
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+    transition: transform 0.05s, filter 0.05s;
+    outline: none;
+    background: #fff;
+    border: 1px solid #999;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 16px;
+    box-shadow: 0 2px 0 #999;
+}
+
+/* 押された時の演出（全てのボタン共通） */
+.btn-pressed, .is-pressed {
+    transform: translateY(2px) !important;
+    box-shadow: none !important;
+    filter: brightness(0.85) !important;
+}
+
+/* メニュー内にあるすべてのボタンの幅を調整（間延び防止） */
+#menuPage button,
+.back-menu-btn {
+    display: block !important;
+    width: 90% !important;
+    max-width: 320px !important; /* PCでも間延びしない適切な幅 */
+    margin: 12px auto !important; /* 中央寄せ */
+    padding: 12px !important;
+    box-sizing: border-box;
+    font-size: 1.05em;
+}
+
+/* モード切り替えボタン（一番上の2つ）を横並びにする設定 */
+.main-mode-select { 
+    display: flex; 
+    gap: 10px; 
+    justify-content: center; 
+    margin: 0 auto 15px;
+    max-width: 400px;
+}
+
+.main-mode-select button { 
+    flex: 1; 
+    max-width: 160px !important; /* 2つ並びの時は少し小さく */
+    padding: 10px 5px !important; 
+    margin: 0 !important; 
+    font-size: 0.9em !important; 
+}
+
+/* --- 設定エリアの調整 --- */
 .mode-title {
     font-size: 1.2em;
     color: #2c3e50;
@@ -19,34 +82,76 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
     background: #ecf0f1;
     padding: 10px;
     border-radius: 5px;
-    margin-top: 10px;    /* 上の隙間を確保 */
-    margin-bottom: 10px; /* 下の隙間を確保 */
+    margin: 15px auto;
+    max-width: 450px;
 }
 
-/* --- ゲームコンテナ（スマホ/PC切り替え） --- */
+/* チェックボックスのグループを中央寄せにする */
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;       /* 折り返しを許可 */
+    justify-content: center; /* ★中身を中央に寄せる */
+    gap: 12px;             /* 項目同士の間隔 */
+    padding: 15px;
+    border: 1px solid #ccc;
+    background: #fafafa;
+    border-radius: 8px;
+    margin: 10px auto;
+    max-width: 450px;      /* チェックボックスエリア自体の幅を制限 */
+    box-sizing: border-box;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    white-space: nowrap;   /* 文字の途中で改行させない */
+}
+
+/* 全選択・解除ボタンを小さく横並びに */
+.btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+button.small-btn {
+    display: inline-block !important;
+    width: auto !important;
+    min-width: 80px;
+    padding: 5px 10px !important;
+    margin: 5px !important;
+    font-size: 0.85em;
+}
+
+/* --- ゲーム画面レイアウト --- */
 .game-container { display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%; }
+
 @media (min-width: 768px) {
     .game-container { flex-direction: row; align-items: flex-start; justify-content: center; }
 }
 
-/* --- メインエリア --- */
 .game-area {
     width: 100%;
     max-width: 500px;
     border: 2px solid #333;
-    padding: 10px;
+    padding: 15px;
     background: white;
     border-radius: 8px;
-    position: relative;
-    min-height: auto; 
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start; 
     box-sizing: border-box;
-    padding-bottom: 5px;
 }
 
-/* --- 電卓エリア全体 --- */
+/* 「メニューに戻る」ボタン */
+.back-menu-btn {
+    background: #666;
+    color: white;
+    border: none;
+    margin-top: 20px !important;
+}
+
+/* --- 電卓エリア --- */
 .calc-area {
     width: 100%; 
     max-width: 360px; 
@@ -56,142 +161,26 @@ body { font-family: sans-serif; background-color: #f4f4f9; padding: 10px; text-a
     border-radius: 8px; 
     box-sizing: border-box;
     margin: 0 auto;
-    position: relative;
-    z-index: 10;
-    touch-action: pan-y;
 }
 
-/* --- ボタンの共通設定（影と立体感） --- */
-button, .calc-btn, .back-menu-btn {
-    -webkit-tap-highlight-color: transparent;
-    cursor: pointer;
-    transition: transform 0.05s, filter 0.05s;
-    outline: none;
-    
-    background: #fff;
-    border: 1px solid #999;
-    border-radius: 6px;
-    padding: 10px 16px;
-    font-size: 16px;
-    box-shadow: 0 2px 0 #999; /* 全ボタン共通の影 */
-}
-
-/* 押された時の演出（全てのボタン共通） */
-.btn-pressed {
-    transform: translateY(2px) !important;
-    box-shadow: none !important;
-    filter: brightness(0.85) !important;
-}
-
-/* 「メニューに戻る」ボタン特有の調整 */
-.back-menu-btn {
-    background: #666;
-    color: white;
-    border: none;
-    width: 100%;
-    border-radius: 4px;
-    margin-top: 15px;
-    margin-bottom: 5px;
-}
-
-/* --- 電卓ボタンの個別微調整 --- */
 .calc-btn {
     display: inline-block;
     width: calc(25% - 8px); 
     height: 55px; 
     margin: 4px 0; 
     font-size: 18px; 
-    touch-action: manipulation;
-    box-sizing: border-box;
 }
 
-.calc-btn-wide {
-    width: 95% !important; 
-    margin: 8px auto !important;
-    display: block;
-}
-
-.calc-buttons-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    width: 100%;
-}
-
-/* --- 入力・履歴エリア --- */
-#calcInput { width: 95%; height: 40px; font-size: 20px; margin-bottom: 10px; text-align: right; display: block; margin: 0 auto 10px; background: white; border: 1px solid #999; }
-.history-box { width: 95%; height: 80px; overflow-y: auto; border: 1px solid #ccc; background: white; margin: 0 auto 10px auto; font-size: 14px; text-align: left; }
+#calcInput { width: 95%; height: 40px; font-size: 20px; text-align: right; display: block; margin: 0 auto 10px; background: white; border: 1px solid #999; }
+.history-box { width: 95%; height: 80px; overflow-y: auto; border: 1px solid #ccc; background: white; margin: 0 auto 10px; font-size: 14px; text-align: left; }
 .rem-history { width: 95%; height: 70px; overflow-y: auto; border: 1px solid #ccc; background: white; margin: 5px auto; font-size: 13px; text-align: left; }
 
-/* --- 問題表示エリア --- */
-#question { font-size: 1.3em; font-weight: bold; margin: 20px 0; line-height: 1.4; }
-#feedback { min-height: 1.5em; font-size: 1.3em; margin-top: 20px; margin-bottom: 10px; }
-#result-message { height: 1.5em; margin: 10px 0; font-weight: bold; }
-#ruleText { line-height: 1.2; font-size: 0.9em; }
-
-.rule-box {
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: red;
-    font-weight: bold;
-    font-size: 0.9em;
-}
-
+/* --- その他 --- */
+#question { font-size: 1.3em; font-weight: bold; margin: 20px 0; }
+#feedback { min-height: 1.5em; font-size: 1.3em; margin: 10px 0; }
+.rule-box { height: 30px; color: red; font-weight: bold; font-size: 0.9em; display: flex; align-items: center; justify-content: center; }
 .hidden { visibility: hidden; }
 
-/* PCでのホバー演出 */
 @media (hover: hover) {
     button:hover, .calc-btn:hover { filter: brightness(0.95); }
-}
-
-/* メニュー内にあるすべてのボタンの幅を統一 */
-#menuPage button,
-.back-menu-btn {
-    display: block !important;
-    width: 90% !important;           /* スマホでの基本幅 */
-    max-width: 400px !important;     /* PCでの最大幅を統一 */
-    margin: 15px auto !important;    /* 中央寄せと上下の間隔 */
-    padding: 15px !important;
-    box-sizing: border-box;
-    font-size: 1.1em;
-    cursor: pointer;
-}
-
-/* --- 全選択・全解除ボタン（小さく並べる） --- */
-button.small-btn {
-    display: inline-block !important; /* 強制ブロック（100%幅）を解除 */
-    width: auto !important;           /* 幅を自動に */
-    min-width: 80px;
-    padding: 8px 15px !important;
-    margin: 5px !important;
-    font-size: 0.9em;
-}
-
-/* --- チェックボックスのキレイな整列（グリッドレイアウト） --- */
-.checkbox-group {
-    display: grid;
-    /* 画面幅に合わせて自動で列数を調整し、最小70pxを確保 */
-    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-    gap: 10px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    margin: 10px auto;
-    background: #fafafa;
-    text-align: left; /* 左揃えにして1桁と2桁のズレをなくす */
-    border-radius: 8px;
-    max-width: 100%;
-}
-.checkbox-group label {
-    display: flex;
-    align-items: center;
-    gap: 5px; /* チェックボックスと文字の間隔 */
-    cursor: pointer;
-}
-
-/* --- スマホ特有のタップバグ対策 --- */
-button, .calc-btn {
-    cursor: pointer; /* iOS Safariでクリックイベントを確実に発火させるため必須 */
-    -webkit-tap-highlight-color: transparent; /* タップ時の青/グレーのハイライトを消す */
 }
