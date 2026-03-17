@@ -43,46 +43,6 @@ function setupCalculator() {
         </div>`;
     
     placeholder.innerHTML = calcHTML;
-    const buttons = placeholder.querySelectorAll('.calc-btn');
-    // 【修正：58行目付近】
-    let touchStartY = 0;
-    let isScrolling = false;
-
-    // common.js の buttons.forEach 内を以下のように調整
-    buttons.forEach(btn => {
-        // 1. 触れた瞬間に「沈ませる」
-        btn.addEventListener('touchstart', (e) => {
-            touchStartY = e.touches[0].clientY;
-            isScrolling = false;
-            btn.classList.add('is-pressed'); // 沈むクラスを追加
-        }, { passive: true });
-
-        // 2. 指が動いたら「沈むのをやめる」（スクロール対策）
-        btn.addEventListener('touchmove', (e) => {
-            let touchMoveY = e.touches[0].clientY;
-            if (Math.abs(touchMoveY - touchStartY) > 10) {
-                isScrolling = true;
-                btn.classList.remove('is-pressed'); // スクロール中は浮かせる
-            }
-        }, { passive: true });
-
-        // 3. 指を離したら「浮かせる」
-        btn.addEventListener('touchend', (e) => {
-            btn.classList.remove('is-pressed'); // クラスを外して戻す
-            
-            if (isScrolling) return;
-
-            e.preventDefault(); 
-            const onclick = btn.getAttribute('onclick');
-            // ...以下、addToDisplay などの既存の実行ロジック...
-            // 前回のコードをそのままここに続けてください
-        }, { passive: false });
-
-        // 4. 【PC対応】マウスで押した時も沈ませる
-        btn.addEventListener('mousedown', () => btn.classList.add('is-pressed'));
-        btn.addEventListener('mouseup', () => btn.classList.remove('is-pressed'));
-        btn.addEventListener('mouseleave', () => btn.classList.remove('is-pressed')); // 枠外に逃げた時用
-    });
     applyButtonFeedback();
 }
 
