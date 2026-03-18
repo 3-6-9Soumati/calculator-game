@@ -293,8 +293,27 @@ button.small-btn {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* 回答ボタン（チェック）の文字を白く強制する */
-#checkBtn {
+/* 1. 【白文字】回答・次の問題・メニューに戻る・全部消す */
+#checkBtn, 
+#nextBtn, 
+.back-menu-btn,
+button[onclick="clearMemo()"] {
     color: white !important;
-    background-color: #27ae60; /* 緑色の背景を維持する場合 */
+}
+
+/* 2. 【黒文字】メモ帳の「閉じる」ボタンを個別に指定 */
+/* 他の白文字設定に負けないように ID や詳細な指定で黒に戻します */
+button[onclick="toggleMemo()"].small-btn {
+    color: #333 !important;
+    background-color: #eee !important; /* 閉じるボタンだと分かりやすく少しグレーに */
+}
+
+/* 3. 回答ボタンなどの背景色も念のため固定 */
+#checkBtn { background-color: #27ae60 !important; }
+#nextBtn { background-color: #2980b9 !important; }
+
+/* 3. メモ帳内の「全部消す」ボタンを白くする */
+/* memo-btnsの中にある、特定のスタイルを持つボタンを狙い撃ちします */
+.memo-btns button {
+    color: white !important;
 }
