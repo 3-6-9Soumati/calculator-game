@@ -215,25 +215,31 @@ button.small-btn {
     button:hover, .calc-btn:hover { filter: brightness(0.95); }
 }
 
-/* --- 浮遊メモボタン（右下に配置） --- */
+/* --- 浮遊メモボタン（右下に配置）最強版 --- */
 #memoFloatingBtn {
-    position: fixed;
-    right: 20px;
-    bottom: 25px;
-    width: 60px;
-    height: 60px;
-    background: #2c3e50;
+    position: fixed !important;
+    right: 20px !important;
+    bottom: 25px !important;
+    width: 60px !important;
+    height: 60px !important;
+    background: #2c3e50 !important;
     color: white !important;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    z-index: 9999;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 28px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+    z-index: 9999 !important;
+    cursor: pointer !important;
+    -webkit-tap-highlight-color: transparent !important;
+    user-select: none !important;
+    
+    /* 余計なボタン設定を強制リセット */
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    max-width: none !important;
 }
 
 /* --- 引き出しメモ帳本体 --- */
