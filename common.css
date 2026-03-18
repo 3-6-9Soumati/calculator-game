@@ -13,7 +13,7 @@ body {
     /* テキスト選択による誤作動防止 */
     -webkit-user-select: none;
     user-select: none;
-    color: #333; /* 基本文字色を固定 */
+    color: #333; 
 }
 
 .page { display: none; }
@@ -47,8 +47,8 @@ button, .calc-btn, .back-menu-btn {
     -webkit-appearance: none;
     appearance: none;
     
-    /* iPhoneの勝手な青文字を防止しつつPCの色を維持 */
-    color: #333 !important;
+    /* 基本文字色は黒（!importantで強制されるのを防ぐため、ここでは弱めに指定） */
+    color: #333;
 }
 
 /* 押された時の演出（全てのボタン共通） */
@@ -99,7 +99,6 @@ button, .calc-btn, .back-menu-btn {
     max-width: 450px;
 }
 
-/* チェックボックスのグループを中央寄せにする */
 .checkbox-group {
     display: flex;
     flex-wrap: wrap;
@@ -120,13 +119,12 @@ button, .calc-btn, .back-menu-btn {
     gap: 5px;
     cursor: pointer;
     white-space: nowrap;
-    width: 80px;         /* 各ラベルの幅を固定する（これでチェック位置が揃う） */
-    justify-content: flex-start; /* 左詰めに配置 */
-    margin: 2px 0;       /* 上下に少し隙間を作る */
+    width: 80px;
+    justify-content: flex-start;
+    margin: 2px 0;
     color: #333;
 }
 
-/* 全選択・解除ボタンを小さく横並びに */
 .btn-group {
     display: flex;
     justify-content: center;
@@ -158,14 +156,6 @@ button.small-btn {
     background: white;
     border-radius: 8px;
     box-sizing: border-box;
-}
-
-/* 「メニューに戻る」ボタン */
-.back-menu-btn {
-    background: #666;
-    color: white !important;
-    border: none;
-    margin-top: 20px !important;
 }
 
 /* --- 電卓エリア --- */
@@ -215,7 +205,7 @@ button.small-btn {
     button:hover, .calc-btn:hover { filter: brightness(0.95); }
 }
 
-/* --- 浮遊メモボタン（右下に配置）最強版 --- */
+/* --- 浮遊メモボタン（右下に配置） --- */
 #memoFloatingBtn {
     position: fixed !important;
     right: 20px !important;
@@ -234,21 +224,18 @@ button.small-btn {
     cursor: pointer !important;
     -webkit-tap-highlight-color: transparent !important;
     user-select: none !important;
-    
-    /* 余計なボタン設定を強制リセット */
     margin: 0 !important;
     padding: 0 !important;
     border: none !important;
-    max-width: none !important;
 }
 
 /* --- 引き出しメモ帳本体 --- */
 .memo-drawer {
     position: fixed;
-    bottom: -100%; /* 完全に画面下に隠す */
+    bottom: -100%; 
     left: 0;
     width: 100%;
-    height: 65vh; /* 画面の約6割の高さ */
+    height: 65vh; 
     background: #fff;
     box-shadow: 0 -5px 25px rgba(0,0,0,0.4);
     transition: bottom 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -263,14 +250,13 @@ button.small-btn {
     bottom: 0;
 }
 
-/* メモの中身 */
 .memo-content {
     flex: 1;
     display: flex;
     flex-direction: column;
     padding: 12px;
     background: #fdfdfd;
-    touch-action: none; /* メモ帳内でのスクロールを防止 */
+    touch-action: none; 
 }
 
 #memoCanvas {
@@ -280,7 +266,6 @@ button.small-btn {
     border-radius: 5px;
 }
 
-/* メモ帳の操作ボタンエリア */
 .memo-btns {
     display: flex;
     justify-content: space-around;
@@ -293,27 +278,48 @@ button.small-btn {
     -webkit-tap-highlight-color: transparent;
 }
 
-/* 1. 【白文字】回答・次の問題・メニューに戻る・全部消す */
-#checkBtn, 
-#nextBtn, 
-.back-menu-btn,
-button[onclick="clearMemo()"] {
+/* --- 特定ボタンの色固定（PC・スマホ共通） --- */
+
+/* 「回答（チェック）」：緑背景・白文字 */
+#checkBtn {
+    background-color: #27ae60 !important;
     color: white !important;
+    border: 1px solid #27ae60 !important;
+    box-shadow: 0 2px 0 #1e8449 !important;
 }
 
-/* 2. 【黒文字】メモ帳の「閉じる」ボタンを個別に指定 */
-/* 他の白文字設定に負けないように ID や詳細な指定で黒に戻します */
+/* 「次の問題へ」：青背景・白文字 */
+#nextBtn {
+    background-color: #2980b9 !important;
+    color: white !important;
+    border: 1px solid #2980b9 !important;
+    box-shadow: 0 2px 0 #1f6391 !important;
+}
+
+/* 「メニューに戻る」：グレー背景・白文字 */
+.back-menu-btn {
+    background: #666 !important;
+    color: white !important;
+    border: none !important;
+}
+
+/* メモ帳の「全部消す」：暗い色背景・白文字 */
+button[onclick="clearMemo()"] {
+    background-color: #7f8c8d !important;
+    color: white !important;
+    border: none !important;
+}
+
+/* メモ帳の「閉じる」：薄いグレー背景・黒文字 */
 button[onclick="toggleMemo()"].small-btn {
     color: #333 !important;
-    background-color: #eee !important; /* 閉じるボタンだと分かりやすく少しグレーに */
+    background-color: #eee !important;
+    border: 1px solid #ccc !important;
+    box-shadow: 0 2px 0 #bbb !important;
 }
 
-/* 3. 回答ボタンなどの背景色も念のため固定 */
-#checkBtn { background-color: #27ae60 !important; }
-#nextBtn { background-color: #2980b9 !important; }
-
-/* 3. メモ帳内の「全部消す」ボタンを白くする */
-/* memo-btnsの中にある、特定のスタイルを持つボタンを狙い撃ちします */
-.memo-btns button {
-    color: white !important;
+/* iPhone/Safari対策：デフォルトの文字色上書きを防止 */
+#checkBtn, #nextBtn, .back-menu-btn, button[onclick="clearMemo()"] {
+    -webkit-appearance: none;
+    appearance: none;
 }
