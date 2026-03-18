@@ -178,3 +178,62 @@ function applyButtonFeedback() {
 document.addEventListener('DOMContentLoaded', applyButtonFeedback);
 
 // setupCalculator() の最後にも applyButtonFeedback(); を追加してください
+
+let isDrawing = false;
+let canvas, ctx;
+
+// メモ帳の開閉
+function toggleMemo() {
+    const drawer = document.getElementById('memoDrawer');
+    const arrow = document.getElementById('memoArrow');
+    drawer.classList.toggle('open');
+    
+    if (drawer.classList.contains('open')) {
+        arrow.innerText = "▼";
+        initCanvas(); // 開いた瞬間にサイズを合わせる
+    } else {
+        arrow.innerText = "▲";
+    }
+}
+
+// キャンバスの初期化
+function initCanvas() {
+    canvas = document.getElementById('memoCanvas');
+    ctx = canvas.getContext('2d');
+    
+    // キャンバスのサイズを実際の表示サイズに合わせる
+    canvas.width = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+    
+    ctx.strokeStyle = "#2c3e50"; // ペンの色
+    ctx.lineWidth = 2;           // ペンの太さ
+    ctx.lineCap = "round";
+
+    // イベント登録（マウス & タッチ）
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDrawing(e.touches[0]); });
+    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e.touches[0]); });
+    canvas.addEventListener('touchend', stopDrawing);
+}
+
+function startDrawing(e) {
+    isDrawing = true;
+    ctx.beginPath();
+    ctx.moveTo(e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top);
+}
+
+function draw(e) {
+    if (!isDrawing) return;
+    ctx.lineTo(e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top);
+    ctx.stroke();
+}
+
+function stopDrawing() {
+    isDrawing = false;
+}
+
+function clearMemo() {
+    if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
