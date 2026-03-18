@@ -292,3 +292,9 @@ button.small-btn {
 * {
     -webkit-tap-highlight-color: transparent;
 }
+
+/* 回答ボタン（チェック）の文字を白く強制する */
+#checkBtn {
+    color: white !important;
+    background-color: #27ae60; /* 緑色の背景を維持する場合 */
+}

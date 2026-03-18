@@ -257,3 +257,42 @@ function clearMemo() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 }
+
+// ページ切り替え関数
+function showPage(pageId) {
+    // 1. すべてのページを非表示にする
+    document.querySelectorAll('.page').forEach(p => {
+        p.classList.remove('active');
+    });
+
+    // 2. 指定されたページを表示する
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) {
+        targetPage.classList.add('active');
+    }
+
+    // 3. メモ起動ボタンの表示・非表示コントロール
+    const memoBtn = document.getElementById('memoFloatingBtn');
+    if (memoBtn) {
+        // ゲーム画面(gamePage)の時だけメモボタンを表示する
+        if (pageId === 'gamePage') {
+            memoBtn.style.display = 'flex';
+        } else {
+            memoBtn.style.display = 'none';
+            // メモ帳が開いたままなら閉じる
+            const drawer = document.getElementById('memoDrawer');
+            if (drawer && drawer.classList.contains('open')) {
+                toggleMemo();
+            }
+        }
+    }
+
+    // 4. ゲーム開始時の初期化処理（必要に応じて）
+    if (pageId === 'gamePage') {
+        initializeCalculator(); // 電卓を準備
+        if (typeof nextQuestion === "function") {
+            // もしindex.html側にnextQuestion関数があれば呼ぶ
+            // 初回のみ実行するフラグ管理などをしてもOK
+        }
+    }
+}
