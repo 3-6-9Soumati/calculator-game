@@ -183,20 +183,18 @@ document.addEventListener('DOMContentLoaded', applyButtonFeedback);
 let isDrawing = false;
 let canvas, ctx;
 
-// メモ帳の開閉（これが定義されていないとエラーになります）
 function toggleMemo() {
     const drawer = document.getElementById('memoDrawer');
-    const arrow = document.getElementById('memoArrow');
+    const floatBtn = document.getElementById('memoFloatingBtn');
     if (!drawer) return;
     
     drawer.classList.toggle('open');
     
     if (drawer.classList.contains('open')) {
-        if (arrow) arrow.innerText = "▼";
-        // 開いた瞬間にキャンバスを準備
+        floatBtn.style.display = "none"; // 開いている時はボタンを隠す
         setTimeout(initCanvas, 100); 
     } else {
-        if (arrow) arrow.innerText = "▲";
+        floatBtn.style.display = "flex"; // 閉じたらボタンを出す
     }
 }
 

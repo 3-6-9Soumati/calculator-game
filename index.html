@@ -99,9 +99,6 @@
         <div id="calculator-placeholder"></div>
     </div>
     <div id="memoDrawer" class="memo-drawer">
-        <div class="memo-handle" onclick="toggleMemo()">
-            <span id="memoArrow">▲</span> メモ帳 (指で書けます)
-        </div>
         <div class="memo-content">
             <canvas id="memoCanvas"></canvas>
             <div class="memo-btns">
@@ -109,6 +106,10 @@
                 <button onclick="toggleMemo()" class="small-btn">閉じる</button>
             </div>
         </div>
+    </div>
+
+    <div id="memoFloatingBtn" onclick="toggleMemo()">
+        <span>✎</span>
     </div>
 </div>
 
