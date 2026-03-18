@@ -179,54 +179,74 @@ document.addEventListener('DOMContentLoaded', applyButtonFeedback);
 
 // setupCalculator() の最後にも applyButtonFeedback(); を追加してください
 
+// --- メモ帳用の変数 ---
 let isDrawing = false;
 let canvas, ctx;
 
-// メモ帳の開閉
+// メモ帳の開閉（これが定義されていないとエラーになります）
 function toggleMemo() {
     const drawer = document.getElementById('memoDrawer');
     const arrow = document.getElementById('memoArrow');
+    if (!drawer) return;
+    
     drawer.classList.toggle('open');
     
     if (drawer.classList.contains('open')) {
-        arrow.innerText = "▼";
-        initCanvas(); // 開いた瞬間にサイズを合わせる
+        if (arrow) arrow.innerText = "▼";
+        // 開いた瞬間にキャンバスを準備
+        setTimeout(initCanvas, 100); 
     } else {
-        arrow.innerText = "▲";
+        if (arrow) arrow.innerText = "▲";
     }
 }
 
 // キャンバスの初期化
 function initCanvas() {
     canvas = document.getElementById('memoCanvas');
+    if (!canvas) return;
     ctx = canvas.getContext('2d');
     
-    // キャンバスのサイズを実際の表示サイズに合わせる
+    // 表示サイズに合わせて解像度を調整
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
     
-    ctx.strokeStyle = "#2c3e50"; // ペンの色
-    ctx.lineWidth = 2;           // ペンの太さ
+    ctx.strokeStyle = "#2c3e50"; 
+    ctx.lineWidth = 3;           // スマホで見やすいよう少し太く
     ctx.lineCap = "round";
+    ctx.lineJoin = "round";
 
-    // イベント登録（マウス & タッチ）
+    // マウスイベント
     canvas.addEventListener('mousedown', startDrawing);
     canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDrawing(e.touches[0]); });
-    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); draw(e.touches[0]); });
+    window.addEventListener('mouseup', stopDrawing);
+
+    // タッチイベント（スマホ用）
+    canvas.addEventListener('touchstart', (e) => {
+        const touch = e.touches[0];
+        startDrawing(touch);
+        e.preventDefault(); 
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+        const touch = e.touches[0];
+        draw(touch);
+        e.preventDefault();
+    }, { passive: false });
+
     canvas.addEventListener('touchend', stopDrawing);
 }
 
 function startDrawing(e) {
     isDrawing = true;
+    const rect = canvas.getBoundingClientRect();
     ctx.beginPath();
-    ctx.moveTo(e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top);
+    ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
 }
 
 function draw(e) {
     if (!isDrawing) return;
-    ctx.lineTo(e.clientX - canvas.getBoundingClientRect().left, e.clientY - canvas.getBoundingClientRect().top);
+    const rect = canvas.getBoundingClientRect();
+    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
     ctx.stroke();
 }
 
@@ -235,5 +255,7 @@ function stopDrawing() {
 }
 
 function clearMemo() {
-    if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (ctx && canvas) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 }
