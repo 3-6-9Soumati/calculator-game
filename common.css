@@ -85,6 +85,23 @@ button, .calc-btn, .back-menu-btn {
     padding: 10px 5px !important; 
     margin: 0 !important; 
     font-size: 0.9em !important; 
+    color: white !important; /* ★スマホで黒文字になるのを防ぐために白を強制 */
+}
+
+/* ★追加：1つ目のボタン（計算トレーニング）をオレンジにする */
+.main-mode-select button:first-child,
+button[onclick*="calc"] {
+    background-color: #e67e22 !important;
+    border-color: #d35400 !important;
+    box-shadow: 0 2px 0 #d35400 !important;
+}
+
+/* ★追加：2つ目のボタン（変換トレーニング）を紫にする */
+.main-mode-select button:last-child,
+button[onclick*="base"] {
+    background-color: #9b59b6 !important;
+    border-color: #8e44ad !important;
+    box-shadow: 0 2px 0 #8e44ad !important;
 }
 
 /* --- 設定エリアの調整 --- */
