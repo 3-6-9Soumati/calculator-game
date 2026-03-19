@@ -47,7 +47,7 @@ button, .calc-btn, .back-menu-btn {
     -webkit-appearance: none;
     appearance: none;
     
-    /* 基本文字色は黒（!importantで強制されるのを防ぐため、ここでは弱めに指定） */
+    /* 基本文字色は黒 */
     color: #333;
 }
 
@@ -85,23 +85,25 @@ button, .calc-btn, .back-menu-btn {
     padding: 10px 5px !important; 
     margin: 0 !important; 
     font-size: 0.9em !important; 
-    color: white !important; /* ★スマホで黒文字になるのを防ぐために白を強制 */
+    color: white !important; /* スマホ対策：文字白固定 */
 }
 
-/* ★追加：1つ目のボタン（計算トレーニング）をオレンジにする */
-.main-mode-select button:first-child,
-button[onclick*="calc"] {
+/* --- トップ画面：特定のボタンの色指定（電卓に干渉しないよう限定） --- */
+
+/* 「計算トレーニング」をオレンジにする */
+#menuPage .main-mode-select button:first-child,
+#menuPage button[onclick*="calc-training"] {
     background-color: #e67e22 !important;
     border-color: #d35400 !important;
-    box-shadow: 0 2px 0 #d35400 !important;
+    box-shadow: 0 3px 0 #d35400 !important;
 }
 
-/* ★追加：2つ目のボタン（変換トレーニング）を紫にする */
-.main-mode-select button:last-child,
-button[onclick*="base"] {
+/* 「変換トレーニング」を紫にする */
+#menuPage .main-mode-select button:last-child,
+#menuPage button[onclick*="base-training"] {
     background-color: #9b59b6 !important;
     border-color: #8e44ad !important;
-    box-shadow: 0 2px 0 #8e44ad !important;
+    box-shadow: 0 3px 0 #8e44ad !important;
 }
 
 /* --- 設定エリアの調整 --- */
@@ -175,7 +177,7 @@ button.small-btn {
     box-sizing: border-box;
 }
 
-/* --- 電卓エリア --- */
+/* --- 電卓エリア（オレンジにならないよう白/黒を明示） --- */
 .calc-area {
     width: 100%; 
     max-width: 360px; 
@@ -185,16 +187,17 @@ button.small-btn {
     border-radius: 8px; 
     box-sizing: border-box;
     margin: 0 auto;
-    color: #000 !important;
 }
 
-.calc-btn {
+.calc-btn, .calc-area button {
     display: inline-block;
     width: calc(25% - 8px); 
     height: 55px; 
     margin: 4px 0; 
     font-size: 18px; 
-    color: #000 !important;
+    background: #fff !important;
+    color: #000 !important; /* 電卓の文字は黒 */
+    box-shadow: 0 2px 0 #999 !important;
 }
 
 #calcInput { 
@@ -222,37 +225,32 @@ button.small-btn {
     button:hover, .calc-btn:hover { filter: brightness(0.95); }
 }
 
-/* --- 浮遊メモボタン（右下に配置） --- */
+/* --- 浮遊メモボタン --- */
 #memoFloatingBtn {
     position: fixed !important;
     right: 20px !important;
     bottom: 25px !important;
-    width: 60px !important;
-    height: 60px !important;
+    width: 65px !important;
+    height: 65px !important;
     background: #2c3e50 !important;
     color: white !important;
     border-radius: 50% !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    font-size: 28px !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+    font-size: 30px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4) !important;
     z-index: 9999 !important;
-    cursor: pointer !important;
-    -webkit-tap-highlight-color: transparent !important;
-    user-select: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
     border: none !important;
 }
 
-/* --- 引き出しメモ帳本体 --- */
+/* --- 引き出しメモ帳本体（広め：75vh） --- */
 .memo-drawer {
     position: fixed;
     bottom: -100%; 
     left: 0;
     width: 100%;
-    height: 65vh; 
+    height: 75vh; 
     background: #fff;
     box-shadow: 0 -5px 25px rgba(0,0,0,0.4);
     transition: bottom 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
@@ -279,30 +277,25 @@ button.small-btn {
 #memoCanvas {
     flex: 1;
     background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
 }
 
 .memo-btns {
     display: flex;
     justify-content: space-around;
-    padding: 12px 0;
+    padding: 12px 0 25px;
     background: #fdfdfd;
 }
 
-/* Safari/iOS 特有の青いタップ枠を全体的に消去 */
-* {
-    -webkit-tap-highlight-color: transparent;
-}
-
-/* --- 特定ボタンの色固定（PC・スマホ共通） --- */
+/* --- 特定ボタンの色固定 --- */
 
 /* 「回答（チェック）」：緑背景・白文字 */
 #checkBtn {
     background-color: #27ae60 !important;
     color: white !important;
     border: 1px solid #27ae60 !important;
-    box-shadow: 0 2px 0 #1e8449 !important;
+    box-shadow: 0 3px 0 #1e8449 !important;
 }
 
 /* 「次の問題へ」：青背景・白文字 */
@@ -310,7 +303,7 @@ button.small-btn {
     background-color: #2980b9 !important;
     color: white !important;
     border: 1px solid #2980b9 !important;
-    box-shadow: 0 2px 0 #1f6391 !important;
+    box-shadow: 0 3px 0 #1f6391 !important;
 }
 
 /* 「メニューに戻る」：グレー背景・白文字 */
@@ -320,9 +313,9 @@ button.small-btn {
     border: none !important;
 }
 
-/* メモ帳の「全部消す」：暗い色背景・白文字 */
+/* メモ帳の「全部消す」：赤背景・白文字 */
 button[onclick="clearMemo()"] {
-    background-color: #7f8c8d !important;
+    background-color: #e74c3c !important;
     color: white !important;
     border: none !important;
 }
@@ -335,7 +328,7 @@ button[onclick="toggleMemo()"].small-btn {
     box-shadow: 0 2px 0 #bbb !important;
 }
 
-/* iPhone/Safari対策：デフォルトの文字色上書きを防止 */
+/* Safari対策 */
 #checkBtn, #nextBtn, .back-menu-btn, button[onclick="clearMemo()"] {
     -webkit-appearance: none;
     appearance: none;
